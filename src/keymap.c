@@ -34,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                         LT(2,KC_ENTER), LT(3,KC_LGUI), KC_NO,  KC_GRV,  KC_DEL,
 
         KC_HOME, KC_NO,
-        KC_END,  KC_PSCR, KC_NO,
+        KC_END,  KC_PSCR, KC_LALT,
         KC_NO,   KC_RCTL, KC_RALT
     ),
 
