@@ -13,6 +13,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 enum custom_keycodes {
     CK_VIM = SAFE_RANGE,
     CK_TMUX,
+    CK_SMILE,
+    CK_SAD,
+    CK_FROWN,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -61,11 +64,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [2] = LAYOUT_ergodox_80(
-        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_PLUS, KC_MINS, KC_EQL,  KC_PERC, KC_NO, KC_NO,
-        KC_NO, KC_ASTR, KC_BSLS, KC_AMPR, KC_CIRC, KC_NO,
-        KC_NO, KC_EXLM, KC_QUES, KC_PIPE, KC_HASH, KC_NO, KC_NO,
-        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_DLR,
+        KC_NO,    KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
+        CK_SMILE, KC_PLUS, KC_MINS, KC_EQL,  KC_PERC, KC_NO, KC_NO,
+        CK_SAD,   KC_ASTR, KC_BSLS, KC_AMPR, KC_CIRC, KC_NO,
+        CK_FROWN, KC_EXLM, KC_QUES, KC_PIPE, KC_HASH, KC_NO, KC_NO,
+        KC_NO,    KC_NO,   KC_NO,   KC_NO,   KC_DLR,
 
                KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO,
@@ -127,6 +130,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case CK_TMUX:
             if (record->event.pressed) {
                 SEND_STRING(SS_LCTL("a"));
+            }
+            break;
+
+        case CK_SMILE:
+            if (record->event.pressed) {
+                SEND_STRING(":-)");
+            }
+            break;
+
+        case CK_SAD:
+            if (record->event.pressed) {
+                SEND_STRING(":-(");
+            }
+            break;
+
+        case CK_FROWN:
+            if (record->event.pressed) {
+                SEND_STRING(":-//");
             }
             break;
     }
