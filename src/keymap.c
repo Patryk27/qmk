@@ -43,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO,   KC_PGUP, KC_HOME, KC_WH_U, KC_NO,   KC_NO, KC_NO,
         KC_NO,   KC_PGDN, KC_END,  KC_WH_D, KC_NO,   KC_NO,
         KC_TRNS, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_TRNS,
+        KC_LCTL, KC_NO,   KC_NO,   KC_NO,   KC_TRNS,
 
                  KC_NO,   KC_NO,
         KC_NO,   KC_NO,   KC_NO,
