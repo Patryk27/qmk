@@ -20,21 +20,21 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        KC_ESC,  KC_NO, KC_NO,  KC_NO,  KC_NO,        KC_NO, KC_NO,
-        KC_NO,   KC_Q,  KC_W,   KC_E,   KC_R,         KC_T,  TD(TD_VOLU),
-        KC_TAB,  KC_A,  KC_S,   KC_D,   KC_F,         KC_G,
-        KC_LSFT, KC_Z,  KC_X,   KC_C,   KC_V,         KC_B,  TD(TD_VOLD),
-        KC_BSPC, KC_NO, KC_DEL, KC_ESC, LT(1,KC_SPC),
+        KC_ESC,  KC_SLSH, KC_BSLS, KC_NO,  KC_NO,        KC_NO, KC_NO,
+        KC_NO,   KC_Q,    KC_W,    KC_E,   KC_R,         KC_T,  TD(TD_VOLU),
+        KC_TAB,  KC_A,    KC_S,    KC_D,   KC_F,         KC_G,
+        KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,         KC_B,  TD(TD_VOLD),
+        KC_BSPC, KC_NO,   KC_NO,   KC_ESC, LT(1,KC_SPC),
 
                  KC_NO,   KC_PGUP,
         KC_NO,   KC_NO,   KC_PGDN,
         KC_LCTL, KC_LALT, TT(1),
 
-        KC_NO,   KC_NO, KC_NO,          KC_UNDS,       KC_NO,  KC_NO,   KC_NO,
-        KC_BRIU, KC_Y,  KC_U,           KC_I,          KC_O,   KC_P,    CK_TMUX,
-                 KC_H,  KC_J,           KC_K,          KC_L,   KC_SCLN, CK_VIM,
-        KC_BRID, KC_N,  KC_M,           KC_COMM,       KC_DOT, KC_SLSH, KC_NO,
-                        LT(2,KC_ENTER), LT(3,KC_LGUI), KC_NO,  KC_GRV,  KC_DEL,
+        KC_NO,   KC_NO, KC_NO,          KC_UNDS,       KC_NO,   KC_NO,   KC_NO,
+        KC_BRIU, KC_Y,  KC_U,           KC_I,          KC_O,    KC_P,    CK_TMUX,
+                 KC_H,  KC_J,           KC_K,          KC_L,    KC_SCLN, CK_VIM,
+        KC_BRID, KC_N,  KC_M,           KC_QUOT,       KC_COMM, KC_DOT,  KC_NO,
+                        LT(2,KC_ENTER), LT(3,KC_LGUI), KC_NO,   KC_GRV,  KC_DEL,
 
         KC_HOME, KC_NO,
         KC_END,  KC_PSCR, KC_LALT,
@@ -77,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
         KC_NO, KC_NO, KC_LCBR, KC_LBRC, KC_RBRC, KC_NO, KC_NO,
                KC_NO, KC_RCBR, KC_LPRN, KC_RPRN, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_QUOT, KC_DQUO, KC_NO,   KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
                       KC_TRNS, KC_NO,   KC_NO,   KC_NO, KC_NO,
 
         KC_NO, KC_NO,
