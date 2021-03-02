@@ -13,6 +13,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 enum custom_keycodes {
     CK_VIM = SAFE_RANGE,
     CK_TMUX,
+    CK_EMACS,
     CK_SMILE,
     CK_SAD,
     CK_FROWN,
@@ -21,11 +22,11 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        KC_NO,   KC_BSPC, KC_SLSH, KC_BSLS, CK_RARROW, KC_NO,   KC_NO,
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,      KC_COMM, KC_LCTL,
-        KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,      KC_T,
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,      KC_DOT,  KC_LSFT,
-        KC_LCTL, KC_LALT, KC_SPC,  MO(3),   MO(1),
+        KC_NO,   KC_BSPC, KC_SLSH,  KC_BSLS, CK_RARROW, KC_NO,   KC_NO,
+        KC_TAB,  KC_Q,    KC_W,     KC_E,    KC_R,      KC_COMM, KC_LCTL,
+        KC_ESC,  KC_A,    KC_S,     KC_D,    KC_F,      KC_T,
+        KC_LSFT, KC_Z,    KC_X,     KC_C,    KC_V,      KC_DOT,  KC_LSFT,
+        KC_LCTL, KC_LALT, CK_EMACS, MO(3),   MO(1),
 
                 TD(TD_VOLU), TD(TD_VOLD),
         KC_GRV, KC_BRIU,     KC_BRID,
@@ -76,8 +77,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO, KC_NO, KC_NO,
 
         KC_NO, KC_NO, KC_NO,   S(KC_QUOT), KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_LBRC, KC_RBRC,    KC_RCBR, KC_NO, KC_NO,
-               KC_NO, KC_LCBR, KC_LPRN,    KC_RPRN, KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_LCBR, KC_LBRC,    KC_RBRC, KC_NO, KC_NO,
+               KC_NO, KC_RCBR, KC_LPRN,    KC_RPRN, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO,   KC_NO,      KC_NO,   KC_NO, KC_NO,
                       KC_TRNS, KC_NO,      KC_NO,   KC_NO, KC_NO,
 
@@ -131,6 +132,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case CK_TMUX:
             if (record->event.pressed) {
                 SEND_STRING(SS_LCTL("a"));
+            }
+            break;
+
+        case CK_EMACS:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_ESC) " ");
             }
             break;
 
