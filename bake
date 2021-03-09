@@ -3,13 +3,13 @@
 set -e
 
 if [[ "$1" == "-i" ]]; then
-    docker build docker -t qmk
+    sudo podman build docker -t qmk
 fi
 
-docker run \
+sudo podman run \
     --rm \
     --privileged \
     -v /dev/bus/usb:/dev/bus/usb \
     -v "$(pwd)/src:/qmk_firmware/keyboards/ergodox_ez/keymaps/custom:ro" \
-    qmk \
+    localhost/qmk \
     qmk flash -kb ergodox_ez -km custom
