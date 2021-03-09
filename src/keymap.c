@@ -40,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO,       KC_NO, KC_NO, KC_UNDS, KC_MINS, KC_DEL,  RESET,
         TD(TD_VOLU), KC_Y,  KC_U,  KC_I,    KC_O,    KC_P,    CK_TMUX,
                      KC_H,  KC_J,  KC_K,    KC_L,    KC_QUOT, CK_VIM,
-        TD(TD_VOLD), KC_N,  KC_M,  KC_COMM, KC_DOT,  KC_SCLN, KC_NO,
+        TD(TD_VOLD), KC_N,  KC_M,  KC_LBRC, KC_RBRC, KC_NO,   KC_NO,
                             LT_2,  KC_RALT, KC_NO,   KC_NO,   KC_RCTL,
 
         KC_NO, CK_SAD,
@@ -49,11 +49,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [1] = LAYOUT_ergodox_80(
-        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_A,  KC_B,  KC_C,  KC_HASH, KC_NO, KC_NO,
-        KC_NO, KC_D,  KC_E,  KC_F,  KC_DOT,  KC_NO,
-        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS,
+        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,      KC_NO, KC_NO,
+        KC_NO,   KC_COMM, KC_DOT,  KC_SCLN, S(KC_SCLN), KC_NO, KC_NO,
+        KC_NO,   KC_LT,   KC_LPRN, KC_LCBR, KC_NO,      KC_NO,
+        KC_TRNS, KC_GT,   KC_RPRN, KC_RCBR, KC_NO,      KC_NO, KC_NO,
+        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_TRNS,
 
                KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO,
@@ -81,11 +81,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO,
 
-        KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_LCBR, KC_LBRC, KC_RBRC, KC_NO, KC_NO,
-               KC_NO, KC_RCBR, KC_LPRN, KC_RPRN, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
-                      KC_TRNS, KC_NO,   KC_NO,   KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO,
+               KC_NO, KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO,
+                      KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO,
 
         KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO,
