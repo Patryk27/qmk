@@ -15,6 +15,7 @@ enum custom_keycodes {
 
     LT_1,
     LT_2,
+    LT_3,
 
     CK_VIM,
     CK_TMUX,
@@ -31,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,      KC_T,  KC_BRIU,
         KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,      KC_G,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,      KC_B,  KC_BRID,
-        KC_LCTL, KC_NO,   KC_NO,   MO(3),   LT_1,
+        KC_LCTL, KC_NO,   KC_NO,   LT_3,    LT_1,
 
                  CK_SMILE, KC_NO,
         KC_NO,   CK_XD,    KC_NO,
@@ -117,6 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool lt1_interrupted = false;
 bool lt2_interrupted = false;
+bool lt3_interrupted = false;
 
 void matrix_scan_user(void) {
     ergodox_board_led_off();
@@ -154,6 +156,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     unregister_code(KC_ENT);
                 }
                 layer_off(2);
+            }
+            return false;
+
+        case LT_3:
+            if (record->event.pressed) {
+                lt3_interrupted = false;
+                layer_on(3);
+            } else {
+                if (!lt3_interrupted) {
+                    register_code(KC_SCLN);
+                    unregister_code(KC_SCLN);
+                }
+                layer_off(3);
             }
             return false;
 
@@ -203,6 +218,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 lt1_interrupted = true;
                 lt2_interrupted = true;
+                lt3_interrupted = true;
             }
     }
 
