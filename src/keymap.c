@@ -31,7 +31,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,  KC_W,    KC_E,  KC_R,  KC_T,  KC_BRIU,
         KC_ESC,  KC_A,  KC_S,    KC_D,  KC_F,  KC_G,
         KC_LSFT, KC_Z,  KC_X,    KC_C,  KC_V,  KC_B,  KC_BRID,
-        KC_LCTL, KC_NO, KC_NO,   LT_3,  LT_1,
+        KC_LCTL, KC_NO, KC_NO,   LT_2,  LT_1,
 
                     CK_SMILE, KC_NO,
         S(KC_LCTL), CK_XD,    KC_NO,
@@ -41,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TD(TD_VOLU), KC_Y,  KC_U,  KC_I,    KC_O,    KC_P,    CK_TMUX,
                      KC_H,  KC_J,  KC_K,    KC_L,    KC_QUOT, CK_VIM,
         TD(TD_VOLD), KC_N,  KC_M,  KC_COMM, KC_DOT,  KC_SCLN, KC_NO,
-                            LT_2,  KC_RALT, KC_NO,   KC_NO,   KC_RCTL,
+                            LT_3,  KC_RALT, KC_NO,   KC_NO,   KC_RCTL,
 
         KC_NO, CK_SAD,
         KC_NO, CK_FROWN,   KC_PSCR,
@@ -71,28 +71,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [2] = LAYOUT_ergodox_80(
-        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_PERC, KC_EXLM, KC_QUES, KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_CIRC, KC_HASH, KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO,
-
-               KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO,
-
-        KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_AT,   KC_LBRC, KC_RBRC, KC_NO, KC_NO,
-               KC_NO, KC_DLR,  KC_AMPR, KC_PIPE, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
-                      KC_TRNS, KC_NO,   KC_NO,   KC_NO, KC_NO,
-
-        KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO
-    ),
-
-    [3] = LAYOUT_ergodox_80(
         KC_NO,   KC_F1,   KC_F2,   KC_F3,   KC_F4, KC_F5, KC_F6,
         KC_NO,   KC_PGUP, KC_HOME, KC_WH_U, KC_NO, KC_NO, KC_NO,
         KC_NO,   KC_PGDN, KC_END,  KC_WH_D, KC_NO, KC_NO,
@@ -113,11 +91,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_NO, KC_NO,   KC_NO,
         KC_NO, KC_BTN3, KC_BTN1
     ),
-};
 
-bool lt1_interrupted = false;
-bool lt2_interrupted = false;
-bool lt3_interrupted = false;
+    [3] = LAYOUT_ergodox_80(
+        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_PERC, KC_EXLM, KC_QUES, KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_CIRC, KC_HASH, KC_NO,   KC_NO, KC_NO,
+        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO,
+
+               KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO,
+
+        KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_AT,   KC_LBRC, KC_RBRC, KC_NO, KC_NO,
+               KC_NO, KC_DLR,  KC_AMPR, KC_PIPE, KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
+                      KC_TRNS, KC_NO,   KC_NO,   KC_NO, KC_NO,
+
+        KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO
+    ),
+};
 
 void matrix_scan_user(void) {
     if (layer_state > 0) {
@@ -127,22 +123,16 @@ void matrix_scan_user(void) {
     }
 }
 
+bool lt_interrupted = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case KC_LGUI:
-            if (record->event.pressed) {
-                ergodox_right_led_3_on();
-            } else {
-                ergodox_right_led_3_off();
-            }
-            return true;
-
         case LT_1:
             if (record->event.pressed) {
-                lt1_interrupted = false;
+                lt_interrupted = false;
                 layer_on(1);
             } else {
-                if (!lt1_interrupted) {
+                if (!lt_interrupted) {
                     register_code(KC_SPC);
                     unregister_code(KC_SPC);
                 }
@@ -152,12 +142,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case LT_2:
             if (record->event.pressed) {
-                lt2_interrupted = false;
+                lt_interrupted = false;
                 layer_on(2);
             } else {
-                if (!lt2_interrupted) {
-                    register_code(KC_ENT);
-                    unregister_code(KC_ENT);
+                if (!lt_interrupted) {
+                    register_code(KC_GRV);
+                    unregister_code(KC_GRV);
                 }
                 layer_off(2);
             }
@@ -165,16 +155,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case LT_3:
             if (record->event.pressed) {
-                lt3_interrupted = false;
+                lt_interrupted = false;
                 layer_on(3);
             } else {
-                if (!lt3_interrupted) {
-                    register_code(KC_GRV);
-                    unregister_code(KC_GRV);
+                if (!lt_interrupted) {
+                    register_code(KC_ENT);
+                    unregister_code(KC_ENT);
                 }
                 layer_off(3);
             }
             return false;
+
+        default:
+            if (record->event.pressed) {
+                lt_interrupted = true;
+            }
+    }
+
+    switch (keycode) {
+        case KC_LGUI:
+            if (record->event.pressed) {
+                ergodox_right_led_3_on();
+            } else {
+                ergodox_right_led_3_off();
+            }
+            return true;
 
         case CK_VIM:
             if (record->event.pressed) {
@@ -212,12 +217,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        default:
-            if (record->event.pressed) {
-                lt1_interrupted = true;
-                lt2_interrupted = true;
-                lt3_interrupted = true;
-            }
     }
 
     return true;
