@@ -25,27 +25,29 @@ enum custom_keycodes {
     CK_FROWN,
 };
 
+#define CK_LGUI MT(MOD_LCTL,KC_LGUI)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        KC_NO,   KC_NO, KC_BSPC, KC_NO, KC_NO, KC_NO, KC_NO,
-        KC_TAB,  KC_Q,  KC_W,    KC_E,  KC_R,  KC_T,  KC_BRIU,
-        KC_ESC,  KC_A,  KC_S,    KC_D,  KC_F,  KC_G,
-        KC_LSFT, KC_Z,  KC_X,    KC_C,  KC_V,  KC_B,  KC_BRID,
-        KC_LCTL, KC_NO, KC_NO,   LT_2,  LT_1,
+        KC_NO,   KC_NO, KC_BSPC, KC_UNDS, KC_NO, KC_NO, KC_NO,
+        KC_TAB,  KC_Q,  KC_W,    KC_E,    KC_R,  KC_T,  KC_BRIU,
+        KC_ESC,  KC_A,  KC_S,    KC_D,    KC_F,  KC_G,
+        KC_LSFT, KC_Z,  KC_X,    KC_C,    KC_V,  KC_B,  KC_BRID,
+        KC_RALT, KC_NO, KC_NO,   LT_2,    LT_1,
 
-                    CK_SMILE, KC_NO,
-        S(KC_LCTL), CK_XD,    KC_NO,
-        KC_LALT,    KC_LCTL,  KC_NO,
+                 KC_NO,   KC_NO,
+        KC_NO,   KC_MAIL, KC_NO,
+        KC_LALT, KC_LCTL, KC_NO,
 
         KC_NO,       KC_NO, KC_NO, KC_MINS, KC_DEL,  KC_NO,   RESET,
         TD(TD_VOLU), KC_Y,  KC_U,  KC_I,    KC_O,    KC_P,    CK_TMUX,
                      KC_H,  KC_J,  KC_K,    KC_L,    KC_QUOT, CK_VIM,
-        TD(TD_VOLD), KC_N,  KC_M,  KC_COMM, KC_DOT,  KC_SCLN, KC_NO,
-                            LT_3,  KC_RALT, KC_NO,   KC_NO,   KC_RCTL,
+        TD(TD_VOLD), KC_N,  KC_M,  KC_COMM, KC_DOT,  KC_SCLN, KC_LSFT,
+                            LT_3,  KC_NO,   KC_NO,   KC_NO,   KC_RALT,
 
-        KC_NO, CK_SAD,
-        KC_NO, CK_FROWN,   KC_PSCR,
-        KC_NO, S(KC_LCTL), KC_LGUI
+        CK_SAD,   CK_SMILE,
+        CK_FROWN, CK_XD,      KC_PSCR,
+        KC_NO,    S(KC_LCTL), CK_LGUI
     ),
 
     [1] = LAYOUT_ergodox_80(
