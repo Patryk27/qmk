@@ -2,7 +2,6 @@
 
 void process_td_scln(qk_tap_dance_state_t *state, void *user_data);
 bool process_record_user_lt(uint16_t keycode, keyrecord_t *record);
-bool process_record_user_mt(uint16_t keycode, keyrecord_t *record);
 bool process_record_user_ck(uint16_t keycode, keyrecord_t *record);
 
 enum tap_dance_combos {
@@ -14,7 +13,6 @@ enum tap_dance_combos {
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_VOLD] = ACTION_TAP_DANCE_DOUBLE(KC_VOLD, KC_MUTE),
     [TD_VOLU] = ACTION_TAP_DANCE_DOUBLE(KC_VOLU, KC_MUTE),
-    [TD_SCLN] = ACTION_TAP_DANCE_FN(process_td_scln),
 };
 
 enum custom_keycodes {
@@ -24,14 +22,8 @@ enum custom_keycodes {
     LT_2,
     LT_3,
 
-    CK_LSFT,
-    CK_RSFT,
-
     CK_VIM,
     CK_VIM_SL,
-    CK_TMUX,
-    CK_SH_HERE,
-    CK_SH_BACK,
 
     CK_SMILE,
     CK_XD,
@@ -41,32 +33,32 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        KC_NO,   KC_NO,      KC_UNDS,    KC_NO,  KC_NO, KC_NO, KC_NO,
-        KC_TAB,  KC_Q,       KC_W,       KC_E,   KC_R,  KC_T,  KC_BRIU,
-        KC_ESC,  KC_A,       KC_S,       KC_D,   KC_F,  KC_G,
-        CK_LSFT, KC_Z,       KC_X,       KC_C,   KC_V,  KC_B,  KC_BRID,
-        KC_LCTL, CK_SH_BACK, CK_SH_HERE, LT_2,   LT_1,
+        KC_MAIL, C(KC_TAB), KC_BSPC, KC_UNDS, KC_NO, KC_NO, KC_NO,
+        KC_TAB,  KC_Q,      KC_W,    KC_E,    KC_R,  KC_T,  KC_BRIU,
+        KC_ESC,  KC_A,      KC_S,    KC_D,    KC_F,  KC_G,
+        KC_LSFT, KC_Z,      KC_X,    KC_C,    KC_V,  KC_B,  KC_BRID,
+        KC_LCTL, KC_NO,     KC_NO,   LT_2,    LT_1,
 
                    KC_NO,   KC_NO,
-        CK_VIM_SL, KC_MAIL, KC_NO,
+        CK_VIM_SL, KC_NO,   KC_NO,
         KC_LALT,   KC_LCTL, KC_NO,
 
-        KC_NO,       KC_NO, KC_NO, KC_MINS, KC_NO,   KC_NO,       RESET,
-        TD(TD_VOLU), KC_Y,  KC_U,  KC_I,    KC_O,    KC_P,        CK_TMUX,
-                     KC_H,  KC_J,  KC_K,    KC_L,    KC_QUOT,     CK_VIM,
-        TD(TD_VOLD), KC_N,  KC_M,  KC_COMM, KC_DOT,  TD(TD_SCLN), CK_RSFT,
-                            LT_3,  KC_RALT, KC_NO,   KC_NO,       KC_NO,
+        KC_NO,       KC_NO, KC_NO, KC_MINS, KC_DEL,  KC_NO,   RESET,
+        TD(TD_VOLU), KC_Y,  KC_U,  KC_I,    KC_O,    KC_P,    KC_NO,
+                     KC_H,  KC_J,  KC_K,    KC_L,    KC_QUOT, CK_VIM,
+        TD(TD_VOLD), KC_N,  KC_M,  KC_COMM, KC_DOT,  KC_SCLN, KC_NO,
+                            LT_3,  KC_RALT, KC_NO,   KC_NO,   KC_NO,
 
         CK_SAD,   CK_SMILE,
-        CK_FROWN, CK_XD,      KC_PSCR,
-        KC_NO,    S(KC_LCTL), KC_LGUI
+        CK_FROWN, CK_XD,      KC_DEL,
+        KC_PSCR,  S(KC_LCTL), KC_LGUI
     ),
 
     [1] = LAYOUT_ergodox_80(
-        KC_NO, KC_NO,     KC_DOT,  KC_NO,   KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_SLSH,   KC_LPRN, KC_RPRN, KC_NO,   KC_NO, KC_NO,
-        KC_NO, KC_BSLS,   KC_LCBR, KC_RCBR, KC_NO,   KC_NO,
-        KC_NO, S(KC_GRV), KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
+        KC_NO, KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,
+        KC_NO, KC_SLSH,   KC_LPRN, KC_RPRN, KC_A,    KC_B,  KC_NO,
+        KC_NO, KC_BSLS,   KC_LCBR, KC_RCBR, KC_C,    KC_D,
+        KC_NO, S(KC_GRV), KC_NO,   KC_NO,   KC_E,    KC_F,  KC_NO,
         KC_NO, KC_NO,     KC_NO,   KC_NO,   KC_TRNS,
 
                KC_NO, KC_NO,
@@ -129,37 +121,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-void matrix_scan_user(void) {
-    if (layer_state > 0) {
-        ergodox_right_led_1_on();
-    } else {
-        ergodox_right_led_1_off();
-    }
-}
-
-void process_td_scln(qk_tap_dance_state_t *state, void *user_data) {
-    switch (state->count) {
-        case 1:
-            SEND_STRING(";");
-            break;
-
-        case 2:
-            SEND_STRING("::");
-            break;
-    }
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (keycode == KC_LGUI) {
-        if (record->event.pressed) {
-            ergodox_right_led_3_on();
-        } else {
-            ergodox_right_led_3_off();
-        }
-    }
-
     return process_record_user_lt(keycode, record)
-        && process_record_user_mt(keycode, record)
         && process_record_user_ck(keycode, record);
 }
 
@@ -206,55 +169,6 @@ bool process_record_user_lt(uint16_t keycode, keyrecord_t *record) {
     return false;
 }
 
-bool process_record_user_mt(uint16_t keycode, keyrecord_t *record) {
-    static uint16_t mt_keycode = 0;
-    static bool mt_pressed = false;
-    static bool mt_interrupted = false;
-
-    uint16_t alt_keycode;
-
-    switch (keycode) {
-        case CK_LSFT:
-            mt_keycode = KC_LSFT;
-            alt_keycode = KC_BSPC;
-            break;
-
-        case CK_RSFT:
-            mt_keycode = KC_RSFT;
-            alt_keycode = KC_DEL;
-            break;
-
-        default:
-            if (mt_pressed) {
-                if (record->event.pressed) {
-                    mt_interrupted = true;
-
-                    register_code(mt_keycode);
-                    tap_code(keycode);
-                    unregister_code(mt_keycode);
-                }
-
-                return false;
-            } else {
-                return true;
-            }
-    }
-
-    if (record->event.pressed) {
-        mt_pressed = true;
-        mt_interrupted = false;
-    } else {
-        if (!mt_interrupted) {
-            tap_code(alt_keycode);
-        }
-
-        mt_pressed = false;
-        mt_interrupted = false;
-    }
-
-    return false;
-}
-
 bool process_record_user_ck(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case CK_VIM:
@@ -266,24 +180,6 @@ bool process_record_user_ck(uint16_t keycode, keyrecord_t *record) {
         case CK_VIM_SL:
             if (record->event.pressed) {
                 SEND_STRING(SS_TAP(X_ESC) "0yg_");
-            }
-            return false;
-
-        case CK_TMUX:
-            if (record->event.pressed) {
-                SEND_STRING(SS_LCTL("a"));
-            }
-            return false;
-
-        case CK_SH_HERE:
-            if (record->event.pressed) {
-                SEND_STRING("./");
-            }
-            return false;
-
-        case CK_SH_BACK:
-            if (record->event.pressed) {
-                SEND_STRING("../");
             }
             return false;
 
