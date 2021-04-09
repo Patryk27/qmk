@@ -40,11 +40,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX,    XXXXXXX,
         LT_C,    C(KC_LALT), C(KC_LSFT),
 
-        XXXXXXX,     XXXXXXX, C(KC_C), C(KC_L), KC_LBRC, KC_RBRC, CK_FROWN,
-        TD(TD_VOLU), KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    CK_SMILE,
-                     KC_H,    KC_J,    KC_K,    KC_L,    MT_D,    CK_XD,
-        TD(TD_VOLD), KC_N,    KC_M,    KC_COMM, KC_DOT,  MT_E,    MT_B,
-                              LT_B,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX,     CK_FROWN, CK_SMILE, CK_XD,   KC_LBRC, KC_RBRC, XXXXXXX,
+        TD(TD_VOLU), KC_Y,     KC_U,     KC_I,    KC_O,    KC_P,    XXXXXXX,
+                     KC_H,     KC_J,     KC_K,    KC_L,    MT_D,    XXXXXXX,
+        TD(TD_VOLD), KC_N,     KC_M,     KC_COMM, KC_DOT,  MT_E,    MT_B,
+                               LT_B,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
@@ -163,24 +163,29 @@ struct Bigram {
 };
 
 const struct Bigram bigrams[] = {
+    // Q
+    { KC_Q, KC_H, KC_CIRC },
+    { KC_Q, KC_J, KC_DLR },
+
     // W
     { KC_W, KC_H, KC_QUES },
     { KC_W, KC_J, KC_EXLM },
 
     // A
-    { KC_A, KC_H, KC_RPRN },
-    { KC_A, KC_J, KC_RCBR },
-    { KC_A, KC_K, KC_RBRC },
+    { KC_A, KC_H, KC_LPRN },
+    { KC_A, KC_J, KC_LCBR },
+    { KC_A, KC_K, KC_LBRC },
 
     // S
     { KC_S, KC_D, KC_UNDS },
     { KC_S, KC_J, KC_SCLN },
     { KC_S, KC_K, S(KC_SCLN) },
+    { KC_S, KC_N, A(KC_SCLN) },
 
     // D
-    { KC_D, KC_H, KC_LPRN },
-    { KC_D, KC_J, KC_LCBR },
-    { KC_D, KC_K, KC_LBRC },
+    { KC_D, KC_H, KC_RPRN },
+    { KC_D, KC_J, KC_RCBR },
+    { KC_D, KC_K, KC_RBRC },
 
     // X
     { KC_X, KC_C, KC_MINS },
@@ -192,27 +197,25 @@ const struct Bigram bigrams[] = {
     // C
     { KC_C, KC_J, KC_PIPE },
     { KC_C, KC_K, KC_AMPR },
-    { KC_C, KC_COMM, KC_DLR },
-    { KC_C, KC_DOT, KC_CIRC },
 };
 
 void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
     const uint8_t count = sizeof(bigrams) / sizeof(bigrams[0]);
 
     // Whether a bigram-able key is pressed at the moment
-    static bool pending = false;
+    static bool _active = false;
 
     // After bigram became active, whether any bigram combination was registered
     // (e.g. KC_S + KC_J)
-    static bool interrupted = false;
+    static bool _interrupted = false;
 
     // After bigram became active, whether any non-bigram combination was
     // registered (e.g. KC_S + KC_A)
-    static bool split = false;
+    static bool _split = false;
 
-    static uint16_t fst_keycode = 0;
-    static uint8_t fst_mods = 0;
-    static uint16_t snd_keycode = 0;
+    static uint16_t _fst_keycode = 0;
+    static uint8_t _fst_mods = 0;
+    static uint16_t _snd_keycode = 0;
 
     if (*handled) {
         return;
@@ -222,19 +225,19 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
         return;
     }
 
-    if (pending) {
-        if (keycode == fst_keycode) {
-            pending = false;
+    if (_active) {
+        if (keycode == _fst_keycode) {
+            _active = false;
 
-            if (!interrupted && !split) {
+            if (!_interrupted && !_split) {
                 uint8_t mods = get_mods();
-                set_mods(fst_mods);
-                tap_code(fst_keycode);
+                set_mods(_fst_mods);
+                tap_code(_fst_keycode);
                 set_mods(mods);
             }
 
-            if (snd_keycode) {
-                unregister_code16(snd_keycode);
+            if (_snd_keycode) {
+                unregister_code16(_snd_keycode);
             }
         } else {
             bool matched = false;
@@ -242,7 +245,7 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
             for (uint8_t i = 0; i < count; i += 1) {
                 const struct Bigram *bg = &bigrams[i];
 
-                if (bg->fst == fst_keycode && bg->snd == keycode) {
+                if (bg->fst == _fst_keycode && bg->snd == keycode) {
                     keycode = bg->alt;
                     matched = true;
                     break;
@@ -250,22 +253,22 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
             }
 
             if (matched) {
-                interrupted = true;
-            } else if (!split) {
-                register_code(fst_keycode);
+                _interrupted = true;
+            } else if (!_split) {
+                register_code(_fst_keycode);
             }
 
             if (record->event.pressed) {
-                snd_keycode = keycode;
+                _snd_keycode = keycode;
                 register_code16(keycode);
             } else {
-                snd_keycode = 0;
+                _snd_keycode = 0;
                 unregister_code16(keycode);
             }
 
-            if (!matched && !split) {
-                split = true;
-                unregister_code(fst_keycode);
+            if (!matched && !_split) {
+                _split = true;
+                unregister_code(_fst_keycode);
             }
         }
 
@@ -284,12 +287,12 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
             }
 
             if (matched) {
-                pending = true;
-                interrupted = false;
-                split = false;
-                fst_keycode = keycode;
-                fst_mods = get_mods();
-                snd_keycode = 0;
+                _active = true;
+                _interrupted = false;
+                _split = false;
+                _fst_keycode = keycode;
+                _fst_mods = get_mods();
+                _snd_keycode = 0;
 
                 *handled = true;
             }
@@ -300,14 +303,11 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
 void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
     const uint8_t count = sizeof(layer_taps) / sizeof(layer_taps[0]);
 
-    // Whether an LT_* key is pressed at the moment
-    static bool pending = false;
-
-    // Whether any key was pressed _after_ `pending` was toggled on
-    static bool interrupted = false;
+    // Whether any key was pressed after LT was activated
+    static bool _interrupted = false;
 
     if (keycode < LT_A || keycode >= LT_A + count) {
-        interrupted |= record->event.pressed;
+        _interrupted |= record->event.pressed;
         return;
     }
 
@@ -315,17 +315,17 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
         return;
     }
 
-    const struct LayerTap *lt = &layer_taps[keycode - LT_A];
+    uint8_t idx = keycode - LT_A;
+    const struct LayerTap *lt = &layer_taps[idx];
 
     if (record->event.pressed) {
-        layer_on(lt->layer);
+        _interrupted = false;
 
-        pending = true;
-        interrupted = false;
+        layer_on(lt->layer);
     } else {
         layer_off(lt->layer);
 
-        if (pending && !interrupted) {
+        if (!_interrupted) {
             tap_code16(lt->tap);
         }
     }
@@ -336,11 +336,17 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
 void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
     const uint8_t count = sizeof(mod_taps) / sizeof(mod_taps[0]);
 
-    static bool pressed = false;
-    static bool interrupted = false;
+    // Whether an MT key is pressed at the moment
+    static bool _active = false;
+
+    // Currently active MT
+    static uint8_t _active_idx = 0;
+
+    // Whether any key was pressed after `active` was toggled on
+    static bool _interrupted = false;
 
     if (keycode < MT_A || keycode >= MT_A + count) {
-        interrupted |= pressed && record->event.pressed;
+        _interrupted |= record->event.pressed;
         return;
     }
 
@@ -348,22 +354,36 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
         return;
     }
 
-    const struct ModTap *mt = &mod_taps[keycode - MT_A];
+    uint8_t idx = keycode - MT_A;
+    const struct ModTap *mt = &mod_taps[idx];
 
-    if (record->event.pressed) {
-        register_code(mt->mod);
+    // Activating one MT shadows the rest
+    if (_active && idx != _active_idx) {
+        _interrupted = true;
 
-        pressed = true;
-        interrupted = false;
-    } else {
-        unregister_code(mt->mod);
-
-        if (!interrupted) {
-            tap_code16(mt->tap);
+        if (record->event.pressed) {
+            register_code(mt->tap);
+        } else {
+            unregister_code(mt->tap);
         }
 
-        pressed = false;
-        interrupted = false;
+        return;
+    }
+
+    if (record->event.pressed) {
+        _active = true;
+        _active_idx = idx;
+        _interrupted = false;
+
+        register_code(mt->mod);
+    } else {
+        _active = false;
+
+        unregister_code(mt->mod);
+
+        if (!_interrupted) {
+            tap_code16(mt->tap);
+        }
     }
 
     *handled = true;
