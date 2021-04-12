@@ -30,15 +30,15 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        RESET,   XXXXXXX, A(KC_SCLN), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        KC_TAB,  KC_Q,    KC_W,       KC_E,    KC_R,    KC_T,    KC_BRIU,
-        KC_ESC,  KC_A,    KC_S,       KC_D,    KC_F,    KC_G,
-        MT_A,    KC_Z,    KC_X,       KC_C,    KC_V,    KC_B,    KC_BRID,
-        KC_RALT, XXXXXXX, KC_PSCR,    KC_LGUI, LT_A,
+        RESET,   XXXXXXX, KC_BSPC, KC_DEL,  XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_BRIU,
+        KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
+        MT_A,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_BRID,
+        KC_RALT, XXXXXXX, KC_PSCR, KC_LGUI, LT_A,
 
-                 XXXXXXX,    KC_MAIL,
-        XXXXXXX, XXXXXXX,    XXXXXXX,
-        LT_C,    C(KC_LALT), C(KC_LSFT),
+                 XXXXXXX, KC_MAIL,
+        XXXXXXX, XXXXXXX, XXXXXXX,
+        LT_C,    XXXXXXX, XXXXXXX,
 
         XXXXXXX,     CK_FROWN, CK_SMILE, CK_XD,   KC_LBRC, KC_RBRC, XXXXXXX,
         TD(TD_VOLU), KC_Y,     KC_U,     KC_I,    KC_O,    KC_P,    XXXXXXX,
@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_LALT, MT_C
+        XXXXXXX, XXXXXXX, MT_C
     ),
 
     [1] = LAYOUT_ergodox_80(
@@ -62,31 +62,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
 
-        XXXXXXX, XXXXXXX,     KC_LT, KC_EXLM, KC_GT,   XXXXXXX,        XXXXXXX,
-        XXXXXXX, KC_KP_PLUS,  KC_1,  KC_2,    KC_3,    KC_KP_ASTERISK, XXXXXXX,
-                 KC_KP_MINUS, KC_4,  KC_5,    KC_6,    KC_KP_SLASH,    XXXXXXX,
-        XXXXXXX, KC_EQL,      KC_7,  KC_8,    KC_9,    XXXXXXX,        XXXXXXX,
-                              KC_0,  KC_DOT,  XXXXXXX, XXXXXXX,        XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, KC_PPLS, KC_PMNS, XXXXXXX, XXXXXXX,
+                 XXXXXXX, XXXXXXX, KC_PPLS, KC_PMNS, KC_EXLM, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, KC_LT,   KC_GT,   XXXXXXX, XXXXXXX,
+                          KC_PEQL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
-        KC_A,    KC_B,    KC_C,
-        KC_D,    KC_E,    KC_F
+        XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX
     ),
 
     [2] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, KC_HOME, KC_END,  XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, KC_BSPC, KC_DEL,  XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, KC_PGUP, KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_1,    KC_2,    KC_3,    KC_A,    KC_B,    XXXXXXX,
+        XXXXXXX, KC_4,    KC_5,    KC_6,    KC_C,    KC_D,
+        XXXXXXX, KC_7,    KC_8,    KC_9,    KC_E,    KC_F,    XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, KC_DOT,  KC_0,
 
                  XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LPRN, KC_RPRN, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_END,  XXXXXXX, XXXXXXX,
+                 XXXXXXX, XXXXXXX, KC_PGUP, KC_PGDN, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                           KC_TRNS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
@@ -147,13 +147,13 @@ const struct ModTap mod_taps[] = {
     { KC_RSFT, KC_BSLS },
 
     // MT_C
-    { KC_LCTL, KC_DOWN },
+    { S(KC_LCTL), KC_DOWN },
 
     // MT_D
     { KC_LCTL, KC_QUOT },
 
     // MT_E
-    { KC_LALT, KC_GRV },
+    { C(KC_LALT), KC_GRV },
 };
 
 struct Bigram {
@@ -362,9 +362,9 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
         _interrupted = true;
 
         if (record->event.pressed) {
-            register_code(mt->tap);
+            register_code16(mt->tap);
         } else {
-            unregister_code(mt->tap);
+            unregister_code16(mt->tap);
         }
 
         return;
@@ -375,11 +375,11 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
         _active_idx = idx;
         _interrupted = false;
 
-        register_code(mt->mod);
+        register_code16(mt->mod);
     } else {
         _active = false;
 
-        unregister_code(mt->mod);
+        unregister_code16(mt->mod);
 
         if (!_interrupted) {
             tap_code16(mt->tap);
