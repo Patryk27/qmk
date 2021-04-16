@@ -63,9 +63,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, KC_PPLS, KC_PMNS, XXXXXXX, XXXXXXX,
-                 XXXXXXX, XXXXXXX, KC_PPLS, KC_PMNS, KC_EXLM, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, KC_LT,   KC_GT,   XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_LPRN, KC_RPRN, KC_PAST, KC_PSLS, KC_PERC, XXXXXXX,
+                 KC_LCBR, KC_RCBR, KC_PPLS, KC_PMNS, KC_EXLM, XXXXXXX,
+        XXXXXXX, KC_LBRC, KC_RBRC, KC_LT,   KC_GT,   XXXXXXX, XXXXXXX,
                           KC_PEQL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
@@ -84,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
 
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LPRN, KC_RPRN, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_END,  XXXXXXX, XXXXXXX,
                  XXXXXXX, XXXXXXX, KC_PGUP, KC_PGDN, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -163,18 +163,14 @@ struct Bigram {
 };
 
 const struct Bigram bigrams[] = {
-    // Q
-    { KC_Q, KC_H, KC_CIRC },
-    { KC_Q, KC_J, KC_DLR },
-
     // W
-    { KC_W, KC_H, KC_QUES },
-    { KC_W, KC_J, KC_EXLM },
+    { KC_W, KC_H, KC_CIRC },
+    { KC_W, KC_J, KC_DLR },
+    { KC_W, KC_K, KC_TILD },
 
     // A
-    { KC_A, KC_H, KC_LPRN },
-    { KC_A, KC_J, KC_LCBR },
-    { KC_A, KC_K, KC_LBRC },
+    { KC_A, KC_H, KC_QUES },
+    { KC_A, KC_J, KC_EXLM },
 
     // S
     { KC_S, KC_D, KC_UNDS },
@@ -183,20 +179,13 @@ const struct Bigram bigrams[] = {
     { KC_S, KC_N, A(KC_SCLN) },
 
     // D
-    { KC_D, KC_H, KC_RPRN },
-    { KC_D, KC_J, KC_RCBR },
-    { KC_D, KC_K, KC_RBRC },
+    { KC_D, KC_H, KC_PIPE },
+    { KC_D, KC_J, KC_AMPR },
 
     // X
     { KC_X, KC_C, KC_MINS },
     { KC_X, KC_H, KC_HASH },
-    { KC_X, KC_J, KC_PERC },
-    { KC_X, KC_K, KC_AT },
-    { KC_X, KC_L, KC_TILD },
-
-    // C
-    { KC_C, KC_J, KC_PIPE },
-    { KC_C, KC_K, KC_AMPR },
+    { KC_X, KC_J, KC_AT },
 };
 
 void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
@@ -273,29 +262,27 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
         }
 
         *handled = true;
-    } else {
-        if (record->event.pressed) {
-            bool matched = false;
+    } else if (record->event.pressed) {
+        bool matched = false;
 
-            for (uint8_t i = 0; i < count; i += 1) {
-                const struct Bigram *bg = &bigrams[i];
+        for (uint8_t i = 0; i < count; i += 1) {
+            const struct Bigram *bg = &bigrams[i];
 
-                if (bg->fst == keycode) {
-                    matched = true;
-                    break;
-                }
+            if (bg->fst == keycode) {
+                matched = true;
+                break;
             }
+        }
 
-            if (matched) {
-                _active = true;
-                _interrupted = false;
-                _split = false;
-                _fst_keycode = keycode;
-                _fst_mods = get_mods();
-                _snd_keycode = 0;
+        if (matched) {
+            _active = true;
+            _interrupted = false;
+            _split = false;
+            _fst_keycode = keycode;
+            _fst_mods = get_mods();
+            _snd_keycode = 0;
 
-                *handled = true;
-            }
+            *handled = true;
         }
     }
 }
