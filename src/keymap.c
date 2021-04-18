@@ -134,6 +134,8 @@ const struct LayerTap layer_taps[] = {
     { 3, KC_UP },
 };
 
+const uint8_t layer_taps_count = sizeof(layer_taps) / sizeof(layer_taps[0]);
+
 struct ModTap {
     uint16_t mod;
     uint16_t tap;
@@ -155,6 +157,8 @@ const struct ModTap mod_taps[] = {
     // MT_E
     { C(KC_LALT), KC_GRV },
 };
+
+const uint8_t mod_taps_count = sizeof(mod_taps) / sizeof(mod_taps[0]);
 
 struct Bigram {
     uint16_t fst;
@@ -188,9 +192,9 @@ const struct Bigram bigrams[] = {
     { KC_X, KC_J, KC_AT },
 };
 
-void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
-    const uint8_t count = sizeof(bigrams) / sizeof(bigrams[0]);
+const uint8_t bigrams_count = sizeof(bigrams) / sizeof(bigrams[0]);
 
+void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
     // Whether a bigram-able key is pressed at the moment
     static bool _active = false;
 
@@ -231,7 +235,7 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
         } else {
             bool matched = false;
 
-            for (uint8_t i = 0; i < count; i += 1) {
+            for (uint8_t i = 0; i < bigrams_count; i += 1) {
                 const struct Bigram *bg = &bigrams[i];
 
                 if (bg->fst == _fst_keycode && bg->snd == keycode) {
@@ -265,7 +269,7 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
     } else if (record->event.pressed) {
         bool matched = false;
 
-        for (uint8_t i = 0; i < count; i += 1) {
+        for (uint8_t i = 0; i < bigrams_count; i += 1) {
             const struct Bigram *bg = &bigrams[i];
 
             if (bg->fst == keycode) {
@@ -288,13 +292,11 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
 }
 
 void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
-    const uint8_t count = sizeof(layer_taps) / sizeof(layer_taps[0]);
-
     // Whether any key was pressed after LT was activated
     static bool _interrupted = false;
 
-    if (keycode < LT_A || keycode >= LT_A + count) {
-        _interrupted |= record->event.pressed;
+    if (keycode < LT_A || keycode >= LT_A + layer_taps_count) {
+        _interrupted = true;
         return;
     }
 
@@ -302,8 +304,7 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
         return;
     }
 
-    uint8_t idx = keycode - LT_A;
-    const struct LayerTap *lt = &layer_taps[idx];
+    const struct LayerTap *lt = &layer_taps[keycode - LT_A];
 
     if (record->event.pressed) {
         _interrupted = false;
@@ -321,19 +322,23 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
 }
 
 void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
-    const uint8_t count = sizeof(mod_taps) / sizeof(mod_taps[0]);
-
     // Whether an MT key is pressed at the moment
     static bool _active = false;
 
-    // Currently active MT
+    // Currently active MT key
     static uint8_t _active_idx = 0;
 
-    // Whether any key was pressed after `active` was toggled on
+    // Whether any key was pressed after MT was activated
     static bool _interrupted = false;
 
-    if (keycode < MT_A || keycode >= MT_A + count) {
-        _interrupted |= record->event.pressed;
+    // Whether another MT key is pressed at the moment
+    static bool _overlapped = false;
+
+    // Which another MT key is pressed, if any
+    static uint16_t _overlapped_key = 0;
+
+    if (keycode < MT_A || keycode >= MT_A + mod_taps_count) {
+        _interrupted = true;
         return;
     }
 
@@ -344,32 +349,45 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
     uint8_t idx = keycode - MT_A;
     const struct ModTap *mt = &mod_taps[idx];
 
-    // Activating one MT shadows the rest
-    if (_active && idx != _active_idx) {
-        _interrupted = true;
+    if (_active) {
+        if (idx == _active_idx) {
+            _active = false;
 
-        if (record->event.pressed) {
-            register_code16(mt->tap);
+            unregister_code16(mt->mod);
+
+            if (!_interrupted) {
+                tap_code16(mt->tap);
+            }
         } else {
-            unregister_code16(mt->tap);
+            _interrupted = true;
+            keycode = mt->tap;
+
+            if (record->event.pressed) {
+                if (_overlapped) {
+                    unregister_code16(_overlapped_key);
+                }
+
+                _overlapped = true;
+                _overlapped_key = keycode;
+
+                register_code16(keycode);
+            } else {
+                _overlapped = false;
+
+                unregister_code16(keycode);
+            }
         }
-
-        return;
-    }
-
-    if (record->event.pressed) {
-        _active = true;
-        _active_idx = idx;
-        _interrupted = false;
-
-        register_code16(mt->mod);
     } else {
-        _active = false;
+        if (record->event.pressed) {
+            _active = true;
+            _active_idx = idx;
+            _interrupted = false;
+            _overlapped = false;
+            _overlapped_key = 0;
 
-        unregister_code16(mt->mod);
-
-        if (!_interrupted) {
-            tap_code16(mt->tap);
+            register_code16(mt->mod);
+        } else {
+            unregister_code16(_overlapped_key);
         }
     }
 
