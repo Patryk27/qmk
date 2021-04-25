@@ -23,10 +23,14 @@ enum custom_keycodes {
     MT_D,
     MT_E,
 
+    CK_TRNS,
     CK_FROWN,
     CK_SMILE,
     CK_XD,
 };
+
+#undef _______
+#define _______ CK_TRNS
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
@@ -53,9 +57,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [1] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
+        XXXXXXX, _______, _______, _______, _______, _______,
+        XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TRNS,
 
                  XXXXXXX, XXXXXXX,
@@ -195,20 +199,22 @@ const struct Bigram bigrams[] = {
 const uint8_t bigrams_count = sizeof(bigrams) / sizeof(bigrams[0]);
 
 void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
-    // Whether a bigram-able key is pressed at the moment
-    static bool _active = false;
+    // Currently pressed bigram
+    static const struct Bigram *_active = 0;
 
-    // After bigram became active, whether any bigram combination was registered
-    // (e.g. KC_S + KC_J)
+    // Whether any bigram combo was registered
     static bool _interrupted = false;
 
-    // After bigram became active, whether any non-bigram combination was
-    // registered (e.g. KC_S + KC_A)
+    // Whether any non-bigram combo was registered
     static bool _split = false;
 
-    static uint16_t _fst_keycode = 0;
-    static uint8_t _fst_mods = 0;
-    static uint16_t _snd_keycode = 0;
+    // Mods that were active when bigram was initiated
+    static uint8_t _mods = 0;
+
+    // Which second key is pressed, if any
+    static uint16_t _overlapped_key = 0;
+
+    static bool _pressed[KC_Z - KC_A + 1] = { false };
 
     if (*handled) {
         return;
@@ -219,18 +225,22 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
     }
 
     if (_active) {
-        if (keycode == _fst_keycode) {
-            _active = false;
+        if (keycode == _active->fst) {
+            if (record->event.pressed) {
+                // Unreachable
+            } else {
+                if (!_interrupted && !_split) {
+                    uint8_t mods = get_mods();
+                    set_mods(_mods);
+                    tap_code(_active->fst);
+                    set_mods(mods);
+                }
 
-            if (!_interrupted && !_split) {
-                uint8_t mods = get_mods();
-                set_mods(_fst_mods);
-                tap_code(_fst_keycode);
-                set_mods(mods);
-            }
+                if (_overlapped_key) {
+                    unregister_code16(_overlapped_key);
+                }
 
-            if (_snd_keycode) {
-                unregister_code16(_snd_keycode);
+                _active = 0;
             }
         } else {
             bool matched = false;
@@ -238,7 +248,7 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
             for (uint8_t i = 0; i < bigrams_count; i += 1) {
                 const struct Bigram *bg = &bigrams[i];
 
-                if (bg->fst == _fst_keycode && bg->snd == keycode) {
+                if (bg->fst == _active->fst && bg->snd == keycode) {
                     keycode = bg->alt;
                     matched = true;
                     break;
@@ -246,57 +256,80 @@ void process_bigram(bool *handled, uint16_t keycode, keyrecord_t *record) {
             }
 
             if (matched) {
-                _interrupted = true;
+                _interrupted |= record->event.pressed;
             } else if (!_split) {
-                register_code(_fst_keycode);
+                register_code(_active->fst);
             }
 
             if (record->event.pressed) {
-                _snd_keycode = keycode;
+                if (_overlapped_key) {
+                    unregister_code16(_overlapped_key);
+                }
+
+                _overlapped_key = keycode;
                 register_code16(keycode);
             } else {
-                _snd_keycode = 0;
+                if (keycode == _overlapped_key) {
+                    _overlapped_key = 0;
+                }
+
                 unregister_code16(keycode);
             }
 
             if (!matched && !_split) {
                 _split = true;
-                unregister_code(_fst_keycode);
+                unregister_code(_active->fst);
             }
         }
 
         *handled = true;
-    } else if (record->event.pressed) {
-        bool matched = false;
+    } else {
+        if (record->event.pressed) {
+            for (uint8_t i = 0; i < bigrams_count; i += 1) {
+                const struct Bigram *bg = &bigrams[i];
 
-        for (uint8_t i = 0; i < bigrams_count; i += 1) {
-            const struct Bigram *bg = &bigrams[i];
-
-            if (bg->fst == keycode) {
-                matched = true;
-                break;
+                if (bg->fst == keycode) {
+                    _active = bg;
+                    break;
+                }
             }
-        }
 
-        if (matched) {
-            _active = true;
-            _interrupted = false;
-            _split = false;
-            _fst_keycode = keycode;
-            _fst_mods = get_mods();
-            _snd_keycode = 0;
+            if (_active) {
+                for (uint8_t i = 0; i < 26; i += 1) {
+                    if (_pressed[i]) {
+                        unregister_code(KC_A + i);
+                        _pressed[i] = false;
+                    }
+                }
 
-            *handled = true;
+                _interrupted = false;
+                _split = false;
+                _mods = get_mods();
+                _overlapped_key = 0;
+
+                *handled = true;
+            } else {
+                _pressed[keycode - KC_A] = true;
+            }
+        } else {
+            _pressed[keycode - KC_A] = false;
         }
     }
 }
 
 void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
+    // Currently pressed LT key
+    static const struct LayerTap *_active = 0;
+
     // Whether any key was pressed after LT was activated
     static bool _interrupted = false;
 
+    if (keycode == CK_TRNS && record->event.pressed && _active) {
+        tap_code16(_active->tap);
+    }
+
     if (keycode < LT_A || keycode >= LT_A + layer_taps_count) {
-        _interrupted = true;
+        _interrupted |= record->event.pressed;
         return;
     }
 
@@ -304,16 +337,27 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
         return;
     }
 
-    const struct LayerTap *lt = &layer_taps[keycode - LT_A];
+    if (_active) {
+        if (record->event.pressed) {
+            // Unreachable
+        } else {
+            layer_off(_active->layer);
 
-    if (record->event.pressed) {
-        _interrupted = false;
+            if (!_interrupted) {
+                tap_code16(_active->tap);
+            }
 
-        layer_on(lt->layer);
+            _active = 0;
+        }
     } else {
-        layer_off(lt->layer);
+        const struct LayerTap *lt = &layer_taps[keycode - LT_A];
 
-        if (!_interrupted) {
+        if (record->event.pressed) {
+            _active = lt;
+            _interrupted = false;
+
+            layer_on(_active->layer);
+        } else {
             tap_code16(lt->tap);
         }
     }
@@ -322,23 +366,20 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
 }
 
 void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
-    // Whether an MT key is pressed at the moment
+    // Whether an MT key is pressed
     static bool _active = false;
 
-    // Currently active MT key
+    // Which MT key is pressed
     static uint8_t _active_idx = 0;
 
     // Whether any key was pressed after MT was activated
     static bool _interrupted = false;
 
-    // Whether another MT key is pressed at the moment
-    static bool _overlapped = false;
-
-    // Which another MT key is pressed, if any
+    // Which second key is pressed, if any
     static uint16_t _overlapped_key = 0;
 
     if (keycode < MT_A || keycode >= MT_A + mod_taps_count) {
-        _interrupted = true;
+        _interrupted |= record->event.pressed;
         return;
     }
 
@@ -358,37 +399,36 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
             if (!_interrupted) {
                 tap_code16(mt->tap);
             }
+
+            if (_overlapped_key) {
+                unregister_code16(_overlapped_key);
+            }
         } else {
             _interrupted = true;
             keycode = mt->tap;
 
             if (record->event.pressed) {
-                if (_overlapped) {
+                if (_overlapped_key) {
                     unregister_code16(_overlapped_key);
                 }
 
-                _overlapped = true;
                 _overlapped_key = keycode;
-
                 register_code16(keycode);
             } else {
-                _overlapped = false;
+                if (keycode == _overlapped_key) {
+                    _overlapped_key = 0;
+                }
 
                 unregister_code16(keycode);
             }
         }
-    } else {
-        if (record->event.pressed) {
-            _active = true;
-            _active_idx = idx;
-            _interrupted = false;
-            _overlapped = false;
-            _overlapped_key = 0;
+    } else if (record->event.pressed) {
+        _active = true;
+        _active_idx = idx;
+        _interrupted = false;
+        _overlapped_key = 0;
 
-            register_code16(mt->mod);
-        } else {
-            unregister_code16(_overlapped_key);
-        }
+        register_code16(mt->mod);
     }
 
     *handled = true;
@@ -400,6 +440,22 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
     }
 
     switch (keycode) {
+        case CK_TRNS:
+            keycode = keymap_key_to_keycode(0, record->event.key);
+
+            if (keycode >= LT_A && keycode < LT_A + layer_taps_count) {
+                keycode = layer_taps[keycode - LT_A].tap;
+            }
+
+            if (record->event.pressed) {
+                register_code(keycode);
+            } else {
+                unregister_code(keycode);
+            }
+
+            *handled = true;
+            return;
+
         case CK_FROWN:
             if (record->event.pressed) {
                 SEND_STRING(":-//");
