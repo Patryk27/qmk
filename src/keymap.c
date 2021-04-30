@@ -24,8 +24,6 @@ enum custom_keycodes {
     MT_E,
 
     CK_TRNS,
-    CK_FROWN,
-    CK_SMILE,
     CK_XD,
 };
 
@@ -44,11 +42,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX,
         LT_C,    XXXXXXX, XXXXXXX,
 
-        XXXXXXX,     CK_FROWN, CK_SMILE, CK_XD,   KC_LBRC, KC_RBRC, XXXXXXX,
-        TD(TD_VOLU), KC_Y,     KC_U,     KC_I,    KC_O,    KC_P,    XXXXXXX,
-                     KC_H,     KC_J,     KC_K,    KC_L,    MT_D,    XXXXXXX,
-        TD(TD_VOLD), KC_N,     KC_M,     KC_COMM, KC_DOT,  MT_E,    MT_B,
-                               LT_B,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX,     XXXXXXX, XXXXXXX, CK_XD,   KC_LBRC, KC_RBRC, XXXXXXX,
+        TD(TD_VOLU), KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    XXXXXXX,
+                     KC_H,    KC_J,    KC_K,    KC_L,    MT_D,    XXXXXXX,
+        TD(TD_VOLD), KC_N,    KC_M,    KC_COMM, KC_DOT,  MT_E,    MT_B,
+                              LT_B,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
@@ -135,7 +133,7 @@ const struct LayerTap layer_taps[] = {
     { 2, KC_ENT },
 
     // LT_C
-    { 3, KC_UP },
+    { 3, KC_DOWN },
 };
 
 const uint8_t layer_taps_count = sizeof(layer_taps) / sizeof(layer_taps[0]);
@@ -153,7 +151,7 @@ const struct ModTap mod_taps[] = {
     { KC_RSFT, KC_BSLS },
 
     // MT_C
-    { S(KC_LCTL), KC_DOWN },
+    { S(KC_LCTL), KC_UP },
 
     // MT_D
     { KC_LCTL, KC_QUOT },
@@ -350,15 +348,15 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
             _active = 0;
         }
     } else {
-        const struct LayerTap *lt = &layer_taps[keycode - LT_A];
+        const struct LayerTap *current = &layer_taps[keycode - LT_A];
 
         if (record->event.pressed) {
-            _active = lt;
+            _active = current;
             _interrupted = false;
 
             layer_on(_active->layer);
         } else {
-            tap_code16(lt->tap);
+            tap_code16(current->tap);
         }
     }
 
@@ -366,11 +364,8 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
 }
 
 void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
-    // Whether an MT key is pressed
-    static bool _active = false;
-
-    // Which MT key is pressed
-    static uint8_t _active_idx = 0;
+    // Currently pressed MT key
+    static const struct ModTap *_active = 0;
 
     // Whether any key was pressed after MT was activated
     static bool _interrupted = false;
@@ -387,25 +382,28 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
         return;
     }
 
-    uint8_t idx = keycode - MT_A;
-    const struct ModTap *mt = &mod_taps[idx];
+    const struct ModTap *current = &mod_taps[keycode - MT_A];
 
     if (_active) {
-        if (idx == _active_idx) {
-            _active = false;
+        if (current == _active) {
+            if (record->event.pressed) {
+                // Unreachable
+            } else {
+                unregister_code16(_active->mod);
 
-            unregister_code16(mt->mod);
+                if (!_interrupted) {
+                    tap_code16(_active->tap);
+                }
 
-            if (!_interrupted) {
-                tap_code16(mt->tap);
-            }
+                if (_overlapped_key) {
+                    unregister_code16(_overlapped_key);
+                }
 
-            if (_overlapped_key) {
-                unregister_code16(_overlapped_key);
+                _active = 0;
             }
         } else {
             _interrupted = true;
-            keycode = mt->tap;
+            keycode = current->tap;
 
             if (record->event.pressed) {
                 if (_overlapped_key) {
@@ -423,12 +421,11 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
             }
         }
     } else if (record->event.pressed) {
-        _active = true;
-        _active_idx = idx;
+        _active = current;
         _interrupted = false;
         _overlapped_key = 0;
 
-        register_code16(mt->mod);
+        register_code16(_active->mod);
     }
 
     *handled = true;
@@ -453,20 +450,6 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
                 unregister_code(keycode);
             }
 
-            *handled = true;
-            return;
-
-        case CK_FROWN:
-            if (record->event.pressed) {
-                SEND_STRING(":-//");
-            }
-            *handled = true;
-            return;
-
-        case CK_SMILE:
-            if (record->event.pressed) {
-                SEND_STRING(":-)");
-            }
             *handled = true;
             return;
 
