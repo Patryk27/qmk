@@ -18,23 +18,41 @@
     "qmk": {
       "flake": false,
       "locked": {
-        "lastModified": 1619341042,
-        "narHash": "sha256-QXNR5xAeTY1vBwCKqyze6hCvOrh6c1eM6hKrt/vrc58=",
-        "owner": "qmk",
-        "repo": "qmk_firmware",
-        "rev": "611cd80861b1bd8ad57ef5b78f11a349e74b1949",
-        "type": "github"
+        "lastModified": 1619606773,
+        "narHash": "sha256-ynAIfY4+fL/6Z8SOeiWZOi11U13n/49GqrhZuYvJmJo=",
+        "ref": "master",
+        "rev": "54e8dd08857b04c1bdf28e2eaa6cc7aefd72f70f",
+        "revCount": 15396,
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/qmk/qmk_firmware.git"
       },
       "original": {
-        "owner": "qmk",
-        "repo": "qmk_firmware",
-        "type": "github"
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/qmk/qmk_firmware.git"
       }
     },
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "qmk": "qmk"
+        "qmk": "qmk",
+        "utils": "utils"
+      }
+    },
+    "utils": {
+      "locked": {
+        "lastModified": 1619345332,
+        "narHash": "sha256-qHnQkEp1uklKTpx3MvKtY6xzgcqXDsz5nLilbbuL+3A=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "2ebf2558e5bf978c7fb8ea927dfaed8fefab2e28",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     }
   },
