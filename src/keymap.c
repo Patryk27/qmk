@@ -31,11 +31,11 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        RESET,         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CK_XD,
-        KC_TAB,        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_BRIU,
-        KC_ESC,        KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
-        MT_A,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_BRID,
-        OSM(MOD_RALT), XXXXXXX, KC_LALT, KC_LCTL, LT_A,
+        RESET,         XXXXXXX,    KC_BSPC, KC_DEL,  XXXXXXX, XXXXXXX, CK_XD,
+        KC_TAB,        KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,    KC_BRIU,
+        KC_ESC,        KC_A,       KC_S,    KC_D,    KC_F,    KC_G,
+        MT_A,          KC_Z,       KC_X,    KC_C,    KC_V,    KC_B,    KC_BRID,
+        OSM(MOD_RALT), C(KC_LALT), KC_LALT, KC_LCTL, LT_A,
 
                  XXXXXXX, KC_MAIL,
         XXXXXXX, XXXXXXX, XXXXXXX,
@@ -43,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         CK_XD,       XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, TG(1),
         TD(TD_VOLU), KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_TAB,
-                     KC_SCLN, KC_H,    KC_J,    KC_K,    KC_L,    KC_BSPC,
+                     KC_SCLN, KC_H,    KC_J,    KC_K,    KC_L,    XXXXXXX,
         TD(TD_VOLD), KC_N,    KC_M,    MT_C,    MT_D,    KC_QUOT, MT_B,
                               LT_B,    LT_C,    XXXXXXX, XXXXXXX, OSM(MOD_RALT),
 
@@ -486,9 +486,6 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
 }
 
 void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
-    // Whether KC_DEL is currently pressed
-    static bool _del_active = false;
-    
     if (*handled) {
         return;
     }
@@ -498,25 +495,6 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
             ergodox_right_led_1_on();
             ergodox_right_led_2_on();
             ergodox_right_led_3_on();
-            return;
-
-        case KC_BSPC:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    unregister_code16(KC_LSFT);
-                    register_code(KC_DEL);
-                    
-                    _del_active = true;
-                    *handled = true;
-                }
-            } else {
-                if (_del_active) {
-                    unregister_code(KC_DEL);
-                    register_code16(KC_LSFT);
-
-                    _del_active = false;
-                }
-            }
             return;
 
         case CK_TRNS:
