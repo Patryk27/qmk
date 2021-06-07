@@ -98,7 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [3] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, _______, KC_AT,   _______, _______, _______, XXXXXXX,
+        XXXXXXX, KC_AT,   KC_LBRC, KC_RBRC, KC_EXLM, _______, XXXXXXX,
         XXXXXXX, KC_HASH, KC_LPRN, KC_RPRN, _______, _______,
         XXXXXXX, KC_ASTR, KC_LCBR, KC_RCBR, _______, _______, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
