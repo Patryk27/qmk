@@ -21,6 +21,7 @@ enum custom_keycodes {
     MT_B,
     MT_C,
     MT_D,
+    MT_E,
 
     CK_TRNS,
     CK_XD,
@@ -31,25 +32,25 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        RESET,         XXXXXXX,    KC_BSPC, KC_DEL,  XXXXXXX, XXXXXXX, CK_XD,
-        KC_TAB,        KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,    KC_BRIU,
-        KC_ESC,        KC_A,       KC_S,    KC_D,    KC_F,    KC_G,
-        MT_A,          KC_Z,       KC_X,    KC_C,    KC_V,    KC_B,    KC_BRID,
-        OSM(MOD_RALT), C(KC_LALT), KC_LALT, KC_LCTL, LT_A,
+        RESET,      XXXXXXX,    KC_BSPC, KC_DEL,  OSM(MOD_RALT), XXXXXXX, CK_XD,
+        KC_TAB,     KC_Q,       KC_W,    KC_E,    KC_R,          KC_T,    KC_BRIU,
+        KC_ESC,     KC_A,       KC_S,    KC_D,    KC_F,          KC_G,
+        MT_A,       KC_Z,       KC_X,    KC_C,    KC_V,          KC_B,    KC_BRID,
+        C(KC_LSFT), C(KC_LALT), KC_LALT, MT_E,    LT_A,
 
                  XXXXXXX, KC_MAIL,
         XXXXXXX, XXXXXXX, XXXXXXX,
         MO(5),   XXXXXXX, XXXXXXX,
 
-        CK_XD,       XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, TG(1),
-        TD(TD_VOLU), KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_TAB,
-                     KC_SCLN, KC_H,    KC_J,    KC_K,    KC_L,    XXXXXXX,
-        TD(TD_VOLD), KC_N,    KC_M,    MT_C,    MT_D,    KC_QUOT, MT_B,
-                              LT_B,    LT_C,    XXXXXXX, XXXXXXX, OSM(MOD_RALT),
+        CK_XD,       XXXXXXX, OSM(MOD_RALT), XXXXXXX, KC_LBRC, KC_RBRC,  TG(1),
+        TD(TD_VOLU), KC_Y,    KC_U,          KC_I,    KC_O,    KC_P,     KC_TAB,
+                     KC_SCLN, KC_H,          KC_J,    KC_K,    KC_L,     KC_GRV,
+        TD(TD_VOLD), KC_N,    KC_M,          MT_C,    MT_D,    KC_QUOT,  MT_B,
+                              LT_B,          LT_C,    XXXXXXX, XXXXXXX,  XXXXXXX,
 
         KC_MAIL, XXXXXXX,
-        XXXXXXX, XXXXXXX, KC_UP,
-        XXXXXXX, XXXXXXX, KC_DOWN
+        XXXXXXX, XXXXXXX,  KC_UP,
+        KC_LEFT, KC_RIGHT, KC_DOWN
     ),
 
     [1] = LAYOUT_ergodox_80(
@@ -76,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [2] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
+        XXXXXXX, KC_ENT,  _______, _______, _______, _______, XXXXXXX,
         XXXXXXX, _______, _______, _______, _______, _______,
         XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TRNS,
@@ -108,8 +109,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
-                 _______, _______, KC_BSPC, KC_DEL,  _______, XXXXXXX,
+        XXXXXXX, _______, _______, _______, _______, KC_SPC,  XXXXXXX,
+                 _______, _______, _______, _______, _______, XXXXXXX,
         XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
                           KC_TRNS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
@@ -198,6 +199,9 @@ const struct ModTap mod_taps[] = {
 
     // MT_D
     { KC_LCTL, KC_DOT },
+
+    // MT_E
+    { KC_LCTL, A(KC_A) },
 };
 
 const uint8_t mod_taps_count = sizeof(mod_taps) / sizeof(mod_taps[0]);
@@ -209,21 +213,18 @@ struct Bigram {
 };
 
 const struct Bigram bigrams[] = {
-    // W
-    { KC_W, KC_J, KC_CIRC },
-    { KC_W, KC_K, KC_DLR },
-    { KC_W, KC_L, KC_TILD },
-
     // S
     { KC_S, KC_D, KC_UNDS },
 
     // D
-    { KC_D, KC_H, KC_PIPE },
-    { KC_D, KC_J, KC_AMPR },
-    { KC_D, KC_K, KC_GRV },
+    { KC_D, KC_J, KC_PIPE },
+    { KC_D, KC_K, KC_AMPR },
 
     // X
     { KC_X, KC_C, KC_MINS },
+    { KC_X, KC_J, KC_CIRC },
+    { KC_X, KC_K, KC_DLR },
+    { KC_X, KC_L, KC_TILD },
 };
 
 const uint8_t bigrams_count = sizeof(bigrams) / sizeof(bigrams[0]);
