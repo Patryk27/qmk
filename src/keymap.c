@@ -110,7 +110,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, _______, _______, _______, _______, KC_SPC,  XXXXXXX,
-                 _______, _______, _______, _______, _______, XXXXXXX,
+                 _______, KC_1,    KC_2,    KC_3,    _______, XXXXXXX,
         XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
                           KC_TRNS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
