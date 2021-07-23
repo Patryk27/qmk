@@ -25,6 +25,7 @@ enum custom_keycodes {
 
     CK_TRNS,
     CK_XD,
+    CK_2CLN,
 };
 
 #undef _______
@@ -32,21 +33,21 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        RESET,      XXXXXXX,    KC_BSPC, KC_DEL,  OSM(MOD_RALT), XXXXXXX, CK_XD,
-        KC_TAB,     KC_Q,       KC_W,    KC_E,    KC_R,          KC_T,    KC_BRIU,
-        KC_ESC,     KC_A,       KC_S,    KC_D,    KC_F,          KC_G,
-        MT_A,       KC_Z,       KC_X,    KC_C,    KC_V,          KC_B,    KC_BRID,
-        C(KC_LSFT), C(KC_LALT), KC_LALT, MT_E,    LT_A,
+        RESET,               KC_EQL,     KC_BSPC, KC_DEL,  XXXXXXX, XXXXXXX, CK_XD,
+        KC_TAB,              KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,    KC_BRIU,
+        MT(MOD_RALT,KC_ESC), KC_A,       KC_S,    KC_D,    KC_F,    KC_G,
+        MT_A,                KC_Z,       KC_X,    KC_C,    KC_V,    KC_B,    KC_BRID,
+        C(KC_LSFT),          C(KC_LALT), KC_LALT, MT_E,    LT_A,
 
                  XXXXXXX, KC_MAIL,
         XXXXXXX, XXXXXXX, XXXXXXX,
         MO(5),   XXXXXXX, XXXXXXX,
 
-        CK_XD,       XXXXXXX, OSM(MOD_RALT), XXXXXXX, KC_LBRC, KC_RBRC,  TG(1),
-        TD(TD_VOLU), KC_Y,    KC_U,          KC_I,    KC_O,    KC_P,     KC_TAB,
-                     KC_SCLN, KC_H,          KC_J,    KC_K,    KC_L,     KC_GRV,
-        TD(TD_VOLD), KC_N,    KC_M,          MT_C,    MT_D,    KC_QUOT,  MT_B,
-                              LT_B,          LT_C,    XXXXXXX, XXXXXXX,  XXXXXXX,
+        CK_XD,       KC_TILD, S(KC_QUOT), KC_MINS, KC_LBRC, KC_RBRC, TG(1),
+        TD(TD_VOLU), KC_Y,    KC_U,       KC_I,    KC_O,    KC_P,    KC_TAB,
+                     KC_SCLN, KC_H,       KC_J,    KC_K,    KC_L,    MT(MOD_RALT,KC_GRV),
+        TD(TD_VOLD), KC_N,    KC_M,       MT_C,    MT_D,    KC_QUOT, MT_B,
+                              LT_B,       LT_C,    XXXXXXX, XXXXXXX, XXXXXXX,
 
         KC_MAIL, XXXXXXX,
         XXXXXXX, XXXXXXX,  KC_UP,
@@ -77,8 +78,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [2] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_ENT,  _______, _______, _______, _______, XXXXXXX,
-        XXXXXXX, _______, _______, _______, _______, _______,
+        XXXXXXX, KC_ENT,  KC_PGUP, _______, _______, _______, XXXXXXX,
+        XXXXXXX, KC_HOME, KC_PGDN, KC_END,  _______, _______,
         XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TRNS,
 
@@ -88,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, _______, KC_PERC, KC_EXLM, KC_QUES, _______, XXXXXXX,
-                 _______, KC_PPLS, KC_PMNS, KC_PAST, KC_PSLS, XXXXXXX,
+                 CK_2CLN, KC_PPLS, KC_PMNS, KC_PAST, KC_PSLS, XXXXXXX,
         XXXXXXX, _______, _______, KC_LT,   KC_GT,   _______, XXXXXXX,
                           KC_PEQL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
@@ -99,8 +100,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [3] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_AT,   KC_LBRC, KC_RBRC, KC_EXLM, _______, XXXXXXX,
-        XXXXXXX, KC_HASH, KC_LPRN, KC_RPRN, _______, _______,
+        XXXXXXX, KC_AT,   KC_LBRC, KC_RBRC, _______, _______, XXXXXXX,
+        XXXXXXX, KC_HASH, KC_LPRN, KC_RPRN, KC_EXLM, _______,
         XXXXXXX, KC_ASTR, KC_LCBR, KC_RCBR, _______, _______, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
@@ -216,15 +217,11 @@ const struct Bigram bigrams[] = {
     // S
     { KC_S, KC_D, KC_UNDS },
 
-    // D
-    { KC_D, KC_J, KC_PIPE },
-    { KC_D, KC_K, KC_AMPR },
-
     // X
-    { KC_X, KC_C, KC_MINS },
+    { KC_X, KC_H, KC_PIPE },
     { KC_X, KC_J, KC_CIRC },
     { KC_X, KC_K, KC_DLR },
-    { KC_X, KC_L, KC_TILD },
+    { KC_X, KC_L, KC_AMPR },
 };
 
 const uint8_t bigrams_count = sizeof(bigrams) / sizeof(bigrams[0]);
@@ -517,6 +514,13 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
         case CK_XD:
             if (record->event.pressed) {
                 SEND_STRING("xD");
+            }
+            *handled = true;
+            return;
+
+        case CK_2CLN:
+            if (record->event.pressed) {
+                SEND_STRING("::");
             }
             *handled = true;
             return;
