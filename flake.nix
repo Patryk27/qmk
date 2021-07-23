@@ -11,7 +11,7 @@
     };
 
     nixpkgs = {
-      url = "github:nixos/nixpkgs/release-20.09";
+      url = "github:nixos/nixpkgs";
     };
 
     utils = {
