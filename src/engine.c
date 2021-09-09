@@ -16,14 +16,6 @@
 
 void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record);
 
-void matrix_scan_user(void) {
-    if (biton32(layer_state) == 1) {
-        ergodox_right_led_3_on();
-    } else {
-        ergodox_right_led_3_off();
-    }
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     bool handled = false;
 

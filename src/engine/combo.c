@@ -14,13 +14,12 @@ void process_combo(bool *handled, uint16_t keycode, keyrecord_t *record) {
     // Which second key is pressed, if any
     static uint16_t _overlapped_key;
 
-    static bool _pressed[KC_Z - KC_A + 1] = { false };
+    // Currently pressed keys; a set
+    static uint16_t _pressed[5] = { 0 };
+
+    const uint8_t pressed_len = sizeof(_pressed) / sizeof(_pressed[0]);
 
     if (_mod_tap_active || *handled) {
-        return;
-    }
-
-    if (keycode < KC_A || keycode > KC_Z) {
         return;
     }
 
@@ -99,10 +98,10 @@ void process_combo(bool *handled, uint16_t keycode, keyrecord_t *record) {
             }
 
             if (_active) {
-                for (uint8_t i = 0; i < 26; i += 1) {
+                for (uint8_t i = 0; i < pressed_len; i += 1) {
                     if (_pressed[i]) {
-                        unregister_code(KC_A + i);
-                        _pressed[i] = false;
+                        unregister_code(_pressed[i]);
+                        _pressed[i] = 0;
                     }
                 }
 
@@ -113,10 +112,19 @@ void process_combo(bool *handled, uint16_t keycode, keyrecord_t *record) {
 
                 *handled = true;
             } else {
-                _pressed[keycode - KC_A] = true;
+                for (uint8_t i = 0; i < pressed_len; i += 1) {
+                    if (!_pressed[i]) {
+                        _pressed[i] = keycode;
+                        break;
+                    }
+                }
             }
         } else {
-            _pressed[keycode - KC_A] = false;
+            for (uint8_t i = 0; i < pressed_len; i += 1) {
+                if (_pressed[i] == keycode) {
+                    _pressed[i] = 0;
+                }
+            }
         }
     }
 }
