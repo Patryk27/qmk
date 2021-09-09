@@ -1,19 +1,19 @@
 #include QMK_KEYBOARD_H
 
-#define COMBO_COUNT 24
-#define LT_COUNT 3
-#define MT_COUNT 5
+#define COMBO_COUNT 26
+#define LT_COUNT 2
+#define MT_COUNT 6
 
 #include "engine.c"
 #include "custom.c"
 
 Combo combos[COMBO_COUNT] = {
     { KC_1, KC_H, KC_MS_L },
+    { KC_1, KC_I, KC_WH_U },
     { KC_1, KC_J, KC_MS_D },
     { KC_1, KC_K, KC_MS_U },
     { KC_1, KC_L, KC_MS_R },
-    { KC_1, KC_M, KC_WH_D },
-    { KC_1, KC_N, KC_WH_U },
+    { KC_1, KC_N, KC_WH_D },
     { KC_1, KC_SPC, KC_BTN1 },
     { KC_COMM, KC_A, KC_LEFT },
     { KC_COMM, KC_D, KC_RIGHT },
@@ -23,6 +23,8 @@ Combo combos[COMBO_COUNT] = {
     { KC_DOT, KC_D, KC_PGDN },
     { KC_DOT, KC_S, KC_END },
     { KC_DOT, KC_W, KC_HOME },
+    { KC_Q, KC_J, KC_BSPC },
+    { KC_Q, KC_K, KC_DEL },
     { KC_QUOT, KC_S, A(KC_DOWN) },
     { KC_QUOT, KC_W, A(KC_UP) },
     { KC_S, KC_D, KC_UNDS },
@@ -45,6 +47,7 @@ ModTap mod_taps[MT_COUNT] = {
     { KC_LCTL, KC_ESC },
     { KC_RALT, KC_PSCR },
     { KC_LALT, KC_LGUI },
+    { KC_LCTL, KC_AT },
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -57,11 +60,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
                     XXXXXXX,    XXXXXXX,
         XXXXXXX,    XXXXXXX,    XXXXXXX,
-        A(KC_LCTL), C(KC_LSFT), XXXXXXX,
+        C(KC_LALT), C(KC_LSFT), XXXXXXX,
 
         KC_MUTE, KC_6,    KC_7,   KC_8,    KC_9,    KC_0,       KC_LBRC,
         KC_VOLU, KC_Y,    KC_U,   KC_I,    KC_O,    KC_P,       KC_RBRC,
-                 KC_QUOT, KC_H,   KC_J,    KC_K,    KC_L,       KC_BSPC,
+                 KC_QUOT, KC_H,   KC_J,    KC_K,    KC_L,       MT(5),
         KC_VOLD, KC_N,    KC_M,   KC_COMM, KC_DOT,  S(KC_QUOT), MT(1),
                           KC_SPC, MT(3),   KC_LEFT, KC_RIGHT,   TG(1),
 
@@ -105,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         XXXXXXX, XXXXXXX,    XXXXXXX, CK_2CLN, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX,    KC_PERC, KC_EXLM, KC_QUES, XXXXXXX, XXXXXXX,
-                 XXXXXXX,    KC_PPLS, KC_PMNS, KC_PAST, KC_SCLN, KC_DEL,
+                 XXXXXXX,    KC_PPLS, KC_PMNS, KC_PAST, KC_SCLN, XXXXXXX,
         XXXXXXX, S(KC_SCLN), KC_PSLS, KC_LT,   KC_GT,   XXXXXXX, XXXXXXX,
                              KC_PEQL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
