@@ -6,6 +6,7 @@ enum custom_keys {
     CK_HEART,
     CK_SMILE,
     CK_XD,
+    CK_TG_SFT,
 };
 
 void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
@@ -18,12 +19,14 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
             ergodox_right_led_1_on();
             ergodox_right_led_2_on();
             ergodox_right_led_3_on();
+
             return;
 
         case CK_2CLN:
             if (record->event.pressed) {
                 SEND_STRING("::");
             }
+
             *handled = true;
             return;
 
@@ -31,6 +34,7 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 SEND_STRING(":-//");
             }
+
             *handled = true;
             return;
 
@@ -38,6 +42,7 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 SEND_STRING("<3");
             }
+
             *handled = true;
             return;
 
@@ -45,6 +50,7 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 SEND_STRING(":-)");
             }
+
             *handled = true;
             return;
 
@@ -68,6 +74,19 @@ void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 SEND_STRING("xD");
             }
+
+            *handled = true;
+            return;
+
+        case CK_TG_SFT:
+            if (record->event.pressed) {
+                if (get_mods() & MOD_LSFT) {
+                    unregister_code(KC_LSFT);
+                } else {
+                    register_code(KC_LSFT);
+                }
+            }
+
             *handled = true;
             return;
     }
