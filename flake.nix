@@ -32,7 +32,7 @@
           projectDir = qmk + "/nix";
         };
 
-        hex = pkgs.runCommandLocal "hex"
+        firmware = pkgs.runCommandLocal "firmware"
           {
             nativeBuildInputs = [
               pkgs-avr.buildPackages.binutils
@@ -57,7 +57,7 @@
           pkgs.writeShellScriptBin "flash" ''
             sudo ${pkgs.teensy-loader-cli}/bin/teensy-loader-cli \
                 --mcu=atmega32u4 \
-                -w ${hex}/firmware.hex \
+                -w ${firmware}/firmware.hex \
                 -v
           '';
       }

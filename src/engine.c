@@ -6,6 +6,7 @@
 #undef _______
 #define _______ CK_TRNS
 
+#include "engine/custom.h"
 #include "engine/combo.h"
 #include "engine/layer_tap.h"
 #include "engine/mod_tap.h"
@@ -13,8 +14,6 @@
 #include "engine/combo.c"
 #include "engine/layer_tap.c"
 #include "engine/mod_tap.c"
-
-void process_custom_key(bool *handled, uint16_t keycode, keyrecord_t *record);
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     bool handled = false;

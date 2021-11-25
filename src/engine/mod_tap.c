@@ -39,7 +39,7 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
                 if (_interrupted) {
                     unregister_code16(_active->mod);
                 } else {
-                    tap_code16(_active->tap);
+                    tap_code16_ex(_active->tap);
                 }
 
                 if (_overlapped_key) {
@@ -59,17 +59,17 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
                 keycode = current->tap;
 
                 if (_overlapped_key) {
-                    unregister_code16(_overlapped_key);
+                    unregister_code16_ex(_overlapped_key);
                 }
 
                 _overlapped_key = keycode;
-                register_code16(keycode);
+                register_code16_ex(keycode);
             } else {
                 if (keycode == _overlapped_key) {
                     _overlapped_key = 0;
                 }
 
-                unregister_code16(keycode);
+                unregister_code16_ex(keycode);
             }
         }
     } else if (record->event.pressed) {
