@@ -1,7 +1,7 @@
 #include QMK_KEYBOARD_H
 
 #define COMBO_COUNT 4
-#define LT_COUNT 3
+#define LT_COUNT 4
 #define MT_COUNT 6
 
 #include "engine.c"
@@ -18,6 +18,7 @@ LayerTap layer_taps[LT_COUNT] = {
     { 2, KC_ENT },
     { 3, KC_SLSH },
     { 4, XXXXXXX },
+    { 5, XXXXXXX },
 };
 
 ModTap mod_taps[MT_COUNT] = {
@@ -31,11 +32,11 @@ ModTap mod_taps[MT_COUNT] = {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        XXXXXXX, KC_1,    KC_2,    KC_3,  KC_4,  KC_5, XXXXXXX,
+        KC_DEL,  KC_1,    KC_2,    KC_3,  KC_4,  KC_5, XXXXXXX,
         MT(2),   KC_Q,    KC_W,    KC_E,  KC_R,  KC_T, KC_HOME,
         MT(0),   KC_A,    KC_S,    KC_D,  KC_F,  KC_G,
         LT(1),   KC_Z,    KC_X,    KC_C,  KC_V,  KC_B, KC_END,
-        XXXXXXX, XXXXXXX, XXXXXXX, MT(4), LT(0),
+        KC_CAPS, XXXXXXX, XXXXXXX, MT(5), LT(0),
 
                        XXXXXXX,    KC_MAIL,
         C(S(KC_LALT)), C(KC_LALT), KC_BRIU,
@@ -45,11 +46,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_PGUP, KC_Y,    KC_U,   KC_I,    KC_O,    KC_P,       MT(3),
                  KC_QUOT, KC_H,   KC_J,    KC_K,    KC_L,       MT(1),
         KC_PGDN, KC_N,    KC_M,   KC_COMM, KC_DOT,  S(KC_QUOT), KC_BSLS,
-                          KC_SPC, MT(5),   XXXXXXX, XXXXXXX,    TG(1),
+                          KC_SPC, MT(4),   XXXXXXX, XXXXXXX,    TG(1),
 
         KC_MUTE, XXXXXXX,
         KC_VOLU, C(KC_LALT), C(S(KC_LALT)),
-        KC_VOLD, C(KC_LSFT), LT(2)
+        KC_VOLD, C(KC_LSFT), LT(3)
     ),
 
     [1] = LAYOUT_ergodox_80(
@@ -99,19 +100,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [3] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX,
-        XXXXXXX, _______, _______, _______, _______, _______,
+        XXXXXXX, _______, KC_LSFT, KC_LALT, _______, _______,
         KC_TRNS, _______, _______, _______, _______, _______, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LCTL,
 
                  XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
 
-        XXXXXXX, XXXXXXX, S(KC_LEFT), S(KC_DOWN), S(KC_UP), S(KC_RGHT), XXXXXXX,
-        XXXXXXX, _______, C(KC_LEFT), C(KC_DOWN), C(KC_UP), C(KC_RGHT), XXXXXXX,
-                 _______, KC_LEFT,    KC_DOWN,    KC_UP,    KC_RGHT,    XXXXXXX,
-        XXXXXXX, _______, A(KC_LEFT), A(KC_DOWN), A(KC_UP), A(KC_RGHT), XXXXXXX,
-                          XXXXXXX,    XXXXXXX,    XXXXXXX,  XXXXXXX,    XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                 _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX,
+        XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
@@ -120,10 +121,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [4] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   XXXXXXX,
-        XXXXXXX, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F9,
-        KC_LSFT, KC_F10,  KC_F11,  KC_F12,  KC_F13,  KC_F14,  XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, KC_LALT, KC_LCTRL,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_ACL0, KC_ACL2, KC_ACL1,
 
                  XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
@@ -134,6 +135,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, XXXXXXX,
         XXXXXXX, KC_WH_D, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX,
                           KC_BTN1, KC_BTN2, XXXXXXX, XXXXXXX, XXXXXXX,
+
+        XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_TRNS
+    ),
+
+    [5] = LAYOUT_ergodox_80(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   XXXXXXX,
+        XXXXXXX, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,
+        XXXXXXX, KC_F11,  KC_F12,  KC_F13,  KC_F14,  KC_F15,  XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+
+                 XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX,
+
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
@@ -152,5 +175,11 @@ void matrix_scan_user(void) {
         ergodox_right_led_2_on();
     } else {
         ergodox_right_led_2_off();
+    }
+
+    if (host_keyboard_leds() & (1 << USB_LED_CAPS_LOCK)) {
+        ergodox_right_led_1_on();
+    } else {
+        ergodox_right_led_1_off();
     }
 }
