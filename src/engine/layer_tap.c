@@ -47,7 +47,7 @@ void process_layer_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
 
             layer_on(_active->layer);
         } else {
-            tap_code16(current->tap);
+            unregister_code16(current->tap);
         }
     }
 

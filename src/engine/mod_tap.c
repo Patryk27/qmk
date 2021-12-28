@@ -13,19 +13,28 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
     // Whether any key was pressed after MT was activated
     static bool _interrupted;
 
-    // Which second key is pressed, if any
-    static uint16_t _overlapped_key;
-
-    if (!is_mod_tap(keycode)) {
-        if (_active && !_interrupted && record->event.pressed) {
-            _interrupted = true;
-            register_code16(_active->mod);
-        }
-
+    if (*handled) {
         return;
     }
 
-    if (*handled) {
+    if (!is_mod_tap(keycode)) {
+        if (_active) {
+            _interrupted = true;
+            register_code16(_active->mod);
+
+            if (is_layer_tap(keycode)) {
+                keycode = get_layer_tap(keycode)->tap;
+            }
+
+            if (record->event.pressed) {
+                register_code16_ex(keycode);
+            } else {
+                unregister_code16_ex(keycode);
+            }
+
+            *handled = true;
+        }
+
         return;
     }
 
@@ -42,41 +51,27 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
                     tap_code16_ex(_active->tap);
                 }
 
-                if (_overlapped_key) {
-                    unregister_code16(_overlapped_key);
-                }
-
                 _active = NULL;
                 _mod_tap_active = false;
             }
         } else {
+            _interrupted = true;
+            register_code16(_active->mod);
+
             if (record->event.pressed) {
-                if (!_interrupted) {
-                    _interrupted = true;
-                    register_code16(_active->mod);
-                }
-
-                keycode = current->tap;
-
-                if (_overlapped_key) {
-                    unregister_code16_ex(_overlapped_key);
-                }
-
-                _overlapped_key = keycode;
-                register_code16_ex(keycode);
+                register_code16_ex(current->tap);
             } else {
-                if (keycode == _overlapped_key) {
-                    _overlapped_key = 0;
-                }
-
-                unregister_code16_ex(keycode);
+                unregister_code16_ex(current->tap);
             }
         }
-    } else if (record->event.pressed) {
-        _active = current;
-        _interrupted = false;
-        _overlapped_key = 0;
-        _mod_tap_active = true;
+    } else {
+        if (record->event.pressed) {
+            _active = current;
+            _interrupted = false;
+            _mod_tap_active = true;
+        } else {
+            unregister_code16(current->tap);
+        }
     }
 
     *handled = true;

@@ -1,7 +1,7 @@
 #include QMK_KEYBOARD_H
 
 #define COMBO_COUNT 4
-#define LT_COUNT 4
+#define LT_COUNT 3
 #define MT_COUNT 6
 
 #include "engine.c"
@@ -15,15 +15,14 @@ Combo combos[COMBO_COUNT] = {
 };
 
 LayerTap layer_taps[LT_COUNT] = {
-    { 2, KC_ENT },
-    { 3, KC_SLSH },
-    { 4, XXXXXXX },
+    { 2, KC_MINS },
+    { 3, KC_LPRN },
     { 5, XXXXXXX },
 };
 
 ModTap mod_taps[MT_COUNT] = {
     { KC_LSFT, KC_ESC },
-    { KC_RSFT, KC_GRV },
+    { KC_RSFT, KC_ENTER },
     { KC_LCTL, KC_TAB },
     { KC_RCTL, CK_EMACS },
     { KC_LALT, KC_LGUI },
@@ -36,21 +35,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         MT(2),   KC_Q,    KC_W,    KC_E,  KC_R,  KC_T, KC_HOME,
         MT(0),   KC_A,    KC_S,    KC_D,  KC_F,  KC_G,
         LT(1),   KC_Z,    KC_X,    KC_C,  KC_V,  KC_B, KC_END,
-        KC_CAPS, XXXXXXX, XXXXXXX, MT(5), LT(0),
+        KC_CAPS, XXXXXXX, XXXXXXX, MT(5), KC_SPC,
 
-                       XXXXXXX,    KC_MAIL,
-        C(S(KC_LALT)), C(KC_LALT), KC_BRIU,
-        TG(4),         C(KC_LSFT), KC_BRID,
+                    XXXXXXX,       XXXXXXX,
+        C(KC_LALT), C(S(KC_LALT)), KC_BRIU,
+        TG(4),      C(KC_LSFT),    KC_BRID,
 
-        XXXXXXX, KC_6,    KC_7,   KC_8,    KC_9,    KC_0,       KC_BSPC,
-        KC_PGUP, KC_Y,    KC_U,   KC_I,    KC_O,    KC_P,       MT(3),
-                 KC_QUOT, KC_H,   KC_J,    KC_K,    KC_L,       MT(1),
-        KC_PGDN, KC_N,    KC_M,   KC_COMM, KC_DOT,  S(KC_QUOT), KC_BSLS,
-                          KC_SPC, MT(4),   XXXXXXX, XXXXXXX,    TG(1),
+        XXXXXXX, KC_6,    KC_7,  KC_8,    KC_9,    KC_0,    KC_BSPC,
+        KC_PGUP, KC_Y,    KC_U,  KC_I,    KC_O,    KC_P,    MT(3),
+                 KC_QUOT, KC_H,  KC_J,    KC_K,    KC_L,    MT(1),
+        KC_PGDN, KC_N,    KC_M,  KC_COMM, KC_DOT,  CK_SLSH, KC_RPRN,
+                          LT(0), MT(4),   XXXXXXX, XXXXXXX, TG(1),
 
         KC_MUTE, XXXXXXX,
-        KC_VOLU, C(KC_LALT), C(S(KC_LALT)),
-        KC_VOLD, C(KC_LSFT), LT(3)
+        KC_VOLU, C(S(KC_LALT)), C(KC_LALT),
+        KC_VOLD, C(KC_LSFT),    LT(2)
     ),
 
     [1] = LAYOUT_ergodox_80(
@@ -76,21 +75,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [2] = LAYOUT_ergodox_80(
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_HASH, KC_LCBR, KC_RCBR, KC_UNDS, XXXXXXX,
-        XXXXXXX, KC_ASTR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TRNS,
+        XXXXXXX, XXXXXXX, KC_LPRN, KC_RPRN,  XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_EXLM, KC_SCLN, KC_QUES,  KC_PERC, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_PSLS, KC_PAST, KC_PMNS,  KC_PPLS, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_LT,   KC_GT,    XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, CK_ARROW, KC_PEQL,
 
                  XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
 
-        XXXXXXX, XXXXXXX,    XXXXXXX, KC_LPRN, KC_RPRN, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX,    KC_EXLM, KC_SCLN, KC_QUES, KC_PERC, XXXXXXX,
-                 XXXXXXX,    KC_PPLS, KC_PMNS, KC_PAST, KC_PSLS, XXXXXXX,
-        XXXXXXX, S(KC_SCLN), XXXXXXX, KC_LT,   KC_GT,   XXXXXXX, XXXXXXX,
-                             KC_PEQL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_HASH,     KC_LBRC, KC_RBRC, KC_ASTR, XXXXXXX,
+                 XXXXXXX, S(KC_SCLN),  KC_LCBR, KC_RCBR, KC_TILD, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_GRV,      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                          KC_TRNS,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
@@ -165,10 +164,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 void matrix_scan_user(void) {
-    if (biton32(layer_state) == 1) {
-        ergodox_right_led_3_on();
+    if (host_keyboard_leds() & (1 << USB_LED_CAPS_LOCK)) {
+        ergodox_right_led_1_on();
     } else {
-        ergodox_right_led_3_off();
+        ergodox_right_led_1_off();
     }
 
     if (biton32(layer_state) == 4) {
@@ -177,9 +176,9 @@ void matrix_scan_user(void) {
         ergodox_right_led_2_off();
     }
 
-    if (host_keyboard_leds() & (1 << USB_LED_CAPS_LOCK)) {
-        ergodox_right_led_1_on();
+    if (biton32(layer_state) == 1) {
+        ergodox_right_led_3_on();
     } else {
-        ergodox_right_led_1_off();
+        ergodox_right_led_3_off();
     }
 }

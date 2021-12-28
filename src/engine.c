@@ -16,11 +16,19 @@
 #include "engine/mod_tap.c"
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == RESET) {
+        ergodox_right_led_1_on();
+        ergodox_right_led_2_on();
+        ergodox_right_led_3_on();
+
+        return true;
+    }
+
     bool handled = false;
 
     process_combo(&handled, keycode, record);
-    process_layer_tap(&handled, keycode, record);
     process_mod_tap(&handled, keycode, record);
+    process_layer_tap(&handled, keycode, record);
     process_custom_key(&handled, keycode, record);
 
     return !handled;

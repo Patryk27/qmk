@@ -23,6 +23,10 @@ void process_combo(bool *handled, uint16_t keycode, keyrecord_t *record) {
         return;
     }
 
+    if (is_layer_tap(keycode)) {
+        keycode = get_layer_tap(keycode)->tap;
+    }
+
     if (is_mod_tap(keycode)) {
         keycode = get_mod_tap(keycode)->tap;
     }
