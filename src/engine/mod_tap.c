@@ -19,20 +19,20 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
 
     if (!is_mod_tap(keycode)) {
         if (_active) {
-            _interrupted = true;
-            register_code16(_active->mod);
-
             if (is_layer_tap(keycode)) {
                 keycode = get_layer_tap(keycode)->tap;
             }
 
-            if (record->event.pressed) {
-                register_code16_ex(keycode);
+            if (_interrupted) {
+                //
             } else {
-                unregister_code16_ex(keycode);
+                if (record->event.pressed) {
+                    _interrupted = true;
+                    register_code16(_active->mod);
+                    register_code16_ex(keycode);
+                    *handled = true;
+                }
             }
-
-            *handled = true;
         }
 
         return;
@@ -70,7 +70,7 @@ void process_mod_tap(bool *handled, uint16_t keycode, keyrecord_t *record) {
             _interrupted = false;
             _mod_tap_active = true;
         } else {
-            unregister_code16(current->tap);
+            unregister_code16_ex(current->tap);
         }
     }
 
