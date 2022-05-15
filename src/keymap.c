@@ -1,6 +1,6 @@
 #include QMK_KEYBOARD_H
 
-#define COMBO_COUNT 7
+#define COMBO_COUNT 4
 #define LT_COUNT 3
 #define MT_COUNT 7
 
@@ -10,11 +10,8 @@
 Combo combos[COMBO_COUNT] = {
     { KC_X, KC_J, KC_CIRC },
     { KC_X, KC_K, KC_DLR },
-    { KC_X, KC_L, KC_PIPE },
-    { KC_X, KC_QUOT, KC_AMPR },
-    { KC_SPACE, KC_COMM, S(KC_SCLN) },
-    { KC_SPACE, KC_QUOT, KC_SCLN },
-    { KC_SPACE, KC_MINS, KC_PLUS },
+    { KC_X, KC_U, KC_AMPR },
+    { KC_X, KC_I, KC_PIPE },
 };
 
 LayerTap layer_taps[LT_COUNT] = {
@@ -34,21 +31,21 @@ ModTap mod_taps[MT_COUNT] = {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        KC_DEL,  KC_1,    KC_2,    KC_3,  KC_4,  KC_5, KC_CAPS,
-        MT(2),   KC_Q,    KC_W,    KC_E,  KC_R,  KC_T, KC_HOME,
-        MT(0),   KC_A,    KC_S,    KC_D,  KC_F,  KC_G,
-        LT(1),   KC_Z,    KC_X,    KC_C,  KC_V,  KC_B, KC_END,
-        XXXXXXX, XXXXXXX, XXXXXXX, MT(5), KC_SPC,
+        KC_DEL,  KC_LBRC, KC_RBRC, KC_EXLM, KC_QUES, XXXXXXX, XXXXXXX,
+        MT(2),   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_HOME,
+        MT(0),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
+        LT(1),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_END,
+        XXXXXXX, XXXXXXX, KC_CAPS, MT(5),   KC_SPC,
 
                     XXXXXXX,       XXXXXXX,
         C(KC_LALT), C(S(KC_LALT)), KC_BRIU,
         TG(4),      C(KC_LSFT),    KC_BRID,
 
-        KC_CAPS, KC_6, KC_7,  KC_8,    KC_9,    KC_0,    KC_BSPC,
-        KC_PGUP, KC_Y, KC_U,  KC_I,    KC_O,    KC_P,    MT(3),
-                 KC_H, KC_J,  KC_K,    KC_L,    KC_QUOT, MT(1),
-        KC_PGDN, KC_N, KC_M,  KC_COMM, KC_DOT,  KC_GRV,  KC_BSLS,
-                       LT(0), MT(4),   XXXXXXX, XXXXXXX, TG(1),
+        XXXXXXX, XXXXXXX, KC_AT, KC_SCLN, KC_LPRN, KC_RPRN, KC_BSPC,
+        KC_PGUP, KC_Y,    KC_U,  KC_I,    KC_O,    KC_P,    MT(3),
+                 KC_H,    KC_J,  KC_K,    KC_L,    KC_QUOT, MT(1),
+        KC_PGDN, KC_N,    KC_M,  KC_COMM, KC_DOT,  KC_GRV,  KC_BSLS,
+                          LT(0), MT(4),   KC_CAPS, XXXXXXX, TG(1),
 
         KC_MUTE, XXXXXXX,
         KC_VOLU, C(S(KC_LALT)), C(KC_LALT),
@@ -78,18 +75,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [2] = LAYOUT_ergodox_80(
-        XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        CK_ARROW2, KC_QUES, KC_PEQL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        CK_ARROW,  KC_PSLS, KC_PAST, KC_PMNS, KC_PPLS, XXXXXXX,
-        XXXXXXX,   XXXXXXX, KC_LBRC, KC_RBRC, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX, KC_PERC,
+        XXXXXXX,   S(KC_SCLN), KC_PEQL, KC_SPC,  XXXXXXX, XXXXXXX, XXXXXXX,
+        CK_ARROW2, KC_1,       KC_2,    KC_3,    KC_PPLS, XXXXXXX, XXXXXXX,
+        CK_ARROW,  KC_4,       KC_5,    KC_6,    KC_PMNS, XXXXXXX,
+        XXXXXXX,   KC_7,       KC_8,    KC_9,    KC_PAST, KC_PSLS, XXXXXXX,
+        XXXXXXX,   XXXXXXX,    XXXXXXX, XXXXXXX, KC_0,
 
                  XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, KC_HASH, KC_TILD, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_HASH, KC_PERC, XXXXXXX, XXXXXXX, XXXXXXX,
                  XXXXXXX, KC_ASTR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                           KC_TRNS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
