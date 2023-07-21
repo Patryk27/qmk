@@ -20,35 +20,44 @@
   };
 
   outputs = { self, qmk, nixpkgs, utils }:
-    utils.lib.eachSystem [ "x86_64-linux" ] (system:
+    utils.lib.eachDefaultSystem (system:
       let
         pkgs = (import nixpkgs) {
           inherit system;
         };
 
-        pkgs-avr = pkgs.pkgsCross.avr;
+        pkgs-linux = (import nixpkgs) {
+          system = "x86_64-linux";
+        };
 
-        qmk-env = pkgs.poetry2nix.mkPoetryEnv {
+        pkgs-linux-avr = pkgs-linux.pkgsCross.avr;
+
+        qmk-env = pkgs-linux.poetry2nix.mkPoetryEnv {
           projectDir = qmk + "/nix";
         };
 
-        firmware = pkgs.runCommandLocal "firmware"
+        firmware = pkgs-linux.runCommandLocal "firmware"
           {
             nativeBuildInputs = [
-              pkgs-avr.buildPackages.binutils
-              pkgs-avr.buildPackages.gcc8
-              pkgs-avr.libcCross
+              pkgs-linux-avr.buildPackages.binutils
+              pkgs-linux-avr.buildPackages.gcc8
+              pkgs-linux-avr.libcCross
             ];
           } ''
-          cp -ar ${qmk}/* /tmp
-          chmod -R 777 /tmp/*
-          sed -i '1c#!${qmk-env}/bin/python3' /tmp/bin/qmk
+          if [ -d /tmp/qmk ]; then
+            rm -rf /tmp/qmk
+          fi
 
-          ln -s ${./src} /tmp/keyboards/ergodox_ez/keymaps/custom
-          /tmp/bin/qmk compile -kb ergodox_ez -km custom
+          mkdir /tmp/qmk
+          cp -ar ${qmk}/* /tmp/qmk
+          chmod -R 777 /tmp/qmk/*
+          sed -i '1c#!${qmk-env}/bin/python3' /tmp/qmk/bin/qmk
+
+          ln -s ${./src} /tmp/qmk/keyboards/ergodox_ez/keymaps/custom
+          /tmp/qmk/bin/qmk compile -kb ergodox_ez -km custom
 
           mkdir $out
-          mv /tmp/ergodox_ez_custom.hex $out/firmware.hex
+          mv /tmp/qmk/ergodox_ez_custom.hex $out/firmware.hex
         '';
 
       in
