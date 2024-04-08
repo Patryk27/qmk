@@ -1,6 +1,3 @@
-# Based on:
-# https://github.com/qmk/qmk_firmware/blob/611cd80861b1bd8ad57ef5b78f11a349e74b1949/shell.nix
-
 {
   inputs = {
     qmk = {
@@ -14,50 +11,54 @@
       url = "github:nixos/nixpkgs";
     };
 
+    poetry2nix = {
+      url = "github:nix-community/poetry2nix";
+
+      inputs = {
+        nixpkgs = {
+          follows = "nixpkgs";
+        };
+      };
+    };
+
     utils = {
       url = "github:numtide/flake-utils";
     };
   };
 
-  outputs = { self, qmk, nixpkgs, utils }:
+  outputs = { self, qmk, nixpkgs, poetry2nix, utils }:
     utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
         };
 
-        pkgs-linux = import nixpkgs {
-          system = "x86_64-linux";
+        poetry2nix' = poetry2nix.lib.mkPoetry2Nix {
+          inherit pkgs;
         };
 
-        pkgs-linux-avr = pkgs-linux.pkgsCross.avr;
+        pkgs-avr = pkgs.pkgsCross.avr;
 
-        qmk-env = pkgs-linux.poetry2nix.mkPoetryEnv {
+        qmk-env = poetry2nix'.mkPoetryEnv {
           projectDir = qmk + "/nix";
         };
 
-        firmware = pkgs-linux.runCommandLocal "firmware"
+        firmware = pkgs-avr.runCommandLocal "firmware"
           {
             nativeBuildInputs = [
-              pkgs-linux-avr.buildPackages.binutils
-              pkgs-linux-avr.buildPackages.gcc8
-              pkgs-linux-avr.libcCross
+              pkgs-avr.buildPackages.gcc8
             ];
           } ''
-          if [ -d /tmp/qmk ]; then
-            rm -rf /tmp/qmk
-          fi
+          mkdir -p $out/qmk
 
-          mkdir /tmp/qmk
-          cp -ar ${qmk}/* /tmp/qmk
-          chmod -R 777 /tmp/qmk/*
-          sed -i '1c#!${qmk-env}/bin/python3' /tmp/qmk/bin/qmk
+          cp -ar ${qmk}/* $out/qmk
+          chmod -R 777 $out/qmk/*
+          sed -i '1c#!${qmk-env}/bin/python3' $out/qmk/bin/qmk
+          ln -s ${./src} $out/qmk/keyboards/ergodox_ez/keymaps/custom
+          $out/qmk/bin/qmk compile -kb ergodox_ez -km custom
 
-          ln -s ${./src} /tmp/qmk/keyboards/ergodox_ez/keymaps/custom
-          /tmp/qmk/bin/qmk compile -kb ergodox_ez -km custom
-
-          mkdir $out
-          mv /tmp/qmk/ergodox_ez_custom.hex $out/firmware.hex
+          mv $out/qmk/ergodox_ez_custom.hex $out/firmware.hex
+          rm -rf $out/qmk
         '';
 
       in
