@@ -23,31 +23,31 @@ ModTap mod_taps[MT_COUNT] = {
     { KC_RSFT, KC_ENTER },
     { KC_LCTL, KC_TAB },
     { KC_RCTL, XXXXXXX },
-    { KC_RALT, KC_LGUI },
+    { KC_RALT, KC_RALT },
     { KC_LALT, KC_PSCR },
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
-        KC_DEL,  XXXXXXX, KC_EXLM, KC_QUES, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_DEL,  KC_EXLM, KC_EQL,  KC_QUES, XXXXXXX, XXXXXXX, XXXXXXX,
         MT(2),   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_HOME,
         MT(0),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
         LT(2),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_END,
-        KC_LSFT, KC_LALT, KC_LGUI, MT(5),   LT(1),
+        KC_LSFT, KC_LALT, KC_LCTL, MT(5),   LT(1),
 
-                XXXXXXX, XXXXXXX,
-        OSL(6), XXXXXXX, KC_BRIU,
-        KC_SPC, TG(5),   KC_BRID,
+                KC_BRID, KC_BRIU,
+        OSL(6), XXXXXXX, XXXXXXX,
+        KC_SPC, KC_LGUI, TG(5),
 
-        XXXXXXX, XXXXXXX, KC_AT, KC_SCLN, KC_LPRN, KC_RPRN, KC_BSPC,
-        KC_PGUP, KC_Y,    KC_U,  KC_I,    KC_O,    KC_P,    MT(3),
-                 KC_H,    KC_J,  KC_K,    KC_L,    KC_QUOT, MT(1),
-        KC_PGDN, KC_N,    KC_M,  KC_COMM, KC_DOT,  KC_GRV,  KC_BSLS,
-                          LT(0), MT(4),   KC_LGUI, KC_LALT, KC_RSFT,
+        XXXXXXX, KC_AT,   S(KC_SCLN), KC_SCLN, KC_LPRN, KC_RPRN, KC_BSPC,
+        KC_PGUP, KC_Y,    KC_U,       KC_I,    KC_O,    KC_P,    MT(3),
+                 KC_H,    KC_J,       KC_K,    KC_L,    KC_QUOT, MT(1),
+        KC_PGDN, KC_N,    KC_M,       KC_COMM, KC_DOT,  KC_GRV,  KC_BSLS,
+                          LT(0),      MT(4),   KC_RCTL, KC_LALT, KC_RSFT,
 
-        KC_MUTE, XXXXXXX,
-        KC_VOLU, TG(1),   OSL(6),
-        KC_VOLD, TG(5),   KC_SPC
+        KC_VOLD, KC_VOLU,
+        XXXXXXX, TG(1),   OSL(6),
+        TG(5),   KC_LGUI, KC_SPC
     ),
 
     [1] = LAYOUT_ergodox_80(
@@ -105,10 +105,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
 
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LCBR, KC_RCBR, XXXXXXX,
-        XXXXXXX, XXXXXXX, KC_AMPR, KC_PIPE, KC_LBRC, KC_RBRC, XXXXXXX,
-                 XXXXXXX, KC_CIRC, KC_DLR,  KC_HASH, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_RBRC, KC_RCBR, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_LBRC, KC_LCBR, KC_HASH, XXXXXXX, XXXXXXX,
+                 XXXXXXX, KC_CIRC, KC_DLR,  KC_ASTR, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_PIPE, KC_AMPR, XXXXXXX, XXXXXXX, XXXXXXX,
                           KC_QUES, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
@@ -147,7 +147,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
                  XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
-        KC_ACL2, KC_TRNS, XXXXXXX,
+        KC_ACL2, XXXXXXX, KC_TRNS,
 
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -157,7 +157,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_TRNS, KC_BTN1
+        KC_TRNS, XXXXXXX, KC_BTN1
     ),
 
     [6] = LAYOUT_ergodox_80(

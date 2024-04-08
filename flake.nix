@@ -22,11 +22,11 @@
   outputs = { self, qmk, nixpkgs, utils }:
     utils.lib.eachDefaultSystem (system:
       let
-        pkgs = (import nixpkgs) {
+        pkgs = import nixpkgs {
           inherit system;
         };
 
-        pkgs-linux = (import nixpkgs) {
+        pkgs-linux = import nixpkgs {
           system = "x86_64-linux";
         };
 
