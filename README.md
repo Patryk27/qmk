@@ -2,7 +2,7 @@
 
 Firmware for my ErgoDox EZ.
 
-# License
+## License
 
 Copyright (c) 2021, Patryk Wychowaniec <pwychowaniec@pm.me>.    
 Licensed under the MIT license.
