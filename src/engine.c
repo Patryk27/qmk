@@ -7,11 +7,9 @@
 #define _______ CK_TRNS
 
 #include "engine/custom.h"
-#include "engine/combo.h"
 #include "engine/layer_tap.h"
 #include "engine/mod_tap.h"
 
-#include "engine/combo.c"
 #include "engine/layer_tap.c"
 #include "engine/mod_tap.c"
 
@@ -26,7 +24,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     bool handled = false;
 
-    process_combo(&handled, keycode, record);
     process_mod_tap(&handled, keycode, record);
     process_layer_tap(&handled, keycode, record);
     process_custom_key(&handled, keycode, record);
