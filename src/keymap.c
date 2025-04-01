@@ -1,44 +1,34 @@
 #include QMK_KEYBOARD_H
 
-#define LT_COUNT 4
-#define MT_COUNT 7
+#define LTA LT(2, KC_SCLN)
+#define LTB LT(3, KC_MINS)
+#define LTC LT(4, KC_SLSH)
+#define LTD LT(5, XXXXXXX)
 
-#include "engine.c"
-#include "custom.c"
-
-LayerTap layer_taps[LT_COUNT] = {
-    { 2, KC_SCLN },
-    { 3, KC_MINS },
-    { 4, KC_SLSH },
-    { 5, XXXXXXX },
-};
-
-ModTap mod_taps[MT_COUNT] = {
-    { KC_LSFT, KC_ESC },
-    { KC_RSFT, KC_ENTER },
-    { KC_LCTL, KC_TAB },
-    { KC_RCTL, XXXXXXX },
-    { KC_RALT, KC_RALT },
-    { KC_LALT, KC_PSCR },
-};
+#define MTA MT(MOD_LSFT, KC_ESC)
+#define MTB MT(MOD_RSFT, KC_ENTER)
+#define MTC MT(MOD_LCTL, KC_TAB)
+#define MTD MT(MOD_RCTL, XXXXXXX)
+#define MTE MT(MOD_RALT, KC_RALT)
+#define MTF MT(MOD_LALT, KC_PSCR)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
         KC_DEL,  KC_EXLM, KC_PEQL, KC_QUES, KC_DLR, KC_PERC, KC_AT,
-        MT(2),   KC_Q,    KC_W,    KC_E,    KC_R,   KC_T,    KC_HOME,
-        MT(0),   KC_A,    KC_S,    KC_D,    KC_F,   KC_G,
-        LT(2),   KC_Z,    KC_X,    KC_C,    KC_V,   KC_B,    KC_END,
-        KC_LSFT, KC_LALT, KC_LCTL, MT(5),   LT(1),
+        MTC,     KC_Q,    KC_W,    KC_E,    KC_R,   KC_T,    KC_HOME,
+        MTA,     KC_A,    KC_S,    KC_D,    KC_F,   KC_G,
+        LTC,     KC_Z,    KC_X,    KC_C,    KC_V,   KC_B,    KC_END,
+        KC_LSFT, KC_LALT, KC_LCTL, MTF,     LTB,
 
                 KC_BRID, KC_BRIU,
         OSL(6), XXXXXXX, XXXXXXX,
         KC_SPC, KC_LGUI, TG(5),
 
         XXXXXXX, KC_CIRC, KC_GRV, KC_LPRN, KC_RPRN, XXXXXXX, KC_BSPC,
-        KC_PGUP, KC_Y,    KC_U,   KC_I,    KC_O,    KC_P,    MT(3),
-                 KC_H,    KC_J,   KC_K,    KC_L,    KC_QUOT, MT(1),
+        KC_PGUP, KC_Y,    KC_U,   KC_I,    KC_O,    KC_P,    MTD,
+                 KC_H,    KC_J,   KC_K,    KC_L,    KC_QUOT, MTB,
         KC_PGDN, KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_BSLS, XXXXXXX,
-                          LT(0),  MT(4),   KC_RCTL, KC_LALT, KC_RSFT,
+                          LTA,    MTE,     KC_RCTL, KC_LALT, KC_RSFT,
 
         KC_VOLD, KC_VOLU,
         XXXXXXX, TG(1),   OSL(6),
@@ -53,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
                  XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_TRNS, RESET,
+        XXXXXXX, KC_TRNS, QK_BOOT,
         XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -63,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TRNS,
 
         XXXXXXX, XXXXXXX,
-        RESET,   KC_TRNS, XXXXXXX,
+        QK_BOOT, KC_TRNS, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX
     ),
 
@@ -179,12 +169,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 void matrix_scan_user(void) {
-    if (host_keyboard_leds() & (1 << USB_LED_CAPS_LOCK)) {
-        ergodox_right_led_1_on();
-    } else {
-        ergodox_right_led_1_off();
-    }
-
     if (biton32(layer_state) == 5) {
         ergodox_right_led_2_on();
     } else {

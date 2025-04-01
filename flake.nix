@@ -1,24 +1,14 @@
 {
   inputs = {
     qmk = {
-      type = "git";
-      url = "https://github.com/qmk/qmk_firmware.git";
-      submodules = true;
       flake = false;
+      submodules = true;
+      type = "git";
+      url = "https://github.com/qmk/qmk_firmware";
     };
 
     nixpkgs = {
       url = "github:nixos/nixpkgs";
-    };
-
-    poetry2nix = {
-      url = "github:nix-community/poetry2nix";
-
-      inputs = {
-        nixpkgs = {
-          follows = "nixpkgs";
-        };
-      };
     };
 
     utils = {
@@ -26,50 +16,51 @@
     };
   };
 
-  outputs = { self, qmk, nixpkgs, poetry2nix, utils }:
-    utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      qmk,
+      nixpkgs,
+      poetry2nix,
+      utils,
+    }:
+    utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
         };
 
-        poetry2nix' = poetry2nix.lib.mkPoetry2Nix {
-          inherit pkgs;
-        };
+        firmware =
+          pkgs.runCommandLocal "firmware"
+            {
+              buildInputs = [ pkgs.git pkgs.qmk ];
+            }
+            ''
+              export HOME=/tmp/qmk
 
-        pkgs-avr = pkgs.pkgsCross.avr;
+              mkdir /tmp/qmk
+              cp -ar ${qmk}/* /tmp/qmk
+              chmod -R 777 /tmp/qmk/*
+              ln -s ${./src} /tmp/qmk/keyboards/ergodox_ez/keymaps/custom
 
-        qmk-env = poetry2nix'.mkPoetryEnv {
-          projectDir = qmk + "/nix";
-        };
+              qmk config user.qmk_home=/tmp/qmk
 
-        firmware = pkgs-avr.runCommandLocal "firmware"
-          {
-            nativeBuildInputs = [
-              pkgs-avr.buildPackages.gcc8
-            ];
-          } ''
-          mkdir -p $out/qmk
+              SKIP_GIT=1 \
+              NOT_REPO=1 \
+              qmk compile -kb ergodox_ez -km custom
 
-          cp -ar ${qmk}/* $out/qmk
-          chmod -R 777 $out/qmk/*
-          sed -i '1c#!${qmk-env}/bin/python3' $out/qmk/bin/qmk
-          ln -s ${./src} $out/qmk/keyboards/ergodox_ez/keymaps/custom
-          $out/qmk/bin/qmk compile -kb ergodox_ez -km custom
-
-          mv $out/qmk/ergodox_ez_custom.hex $out/firmware.hex
-          rm -rf $out/qmk
-        '';
+              mv /tmp/qmk/ergodox_ez_base_custom.hex $out
+            '';
 
       in
       {
-        defaultPackage =
-          pkgs.writeShellScriptBin "flash" ''
-            sudo ${pkgs.teensy-loader-cli}/bin/teensy-loader-cli \
-                --mcu=atmega32u4 \
-                -w ${firmware}/firmware.hex \
-                -v
-          '';
+        defaultPackage = pkgs.writeShellScriptBin "flash" ''
+          sudo ${pkgs.teensy-loader-cli}/bin/teensy-loader-cli \
+              --mcu=atmega32u4 \
+              -w ${firmware} \
+              -v
+        '';
       }
     );
 }
