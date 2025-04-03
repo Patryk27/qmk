@@ -10,7 +10,7 @@
 #define MTC MT(MOD_LCTL, KC_TAB)
 #define MTD MT(MOD_RCTL, XXXXXXX)
 #define MTE MT(MOD_RALT, KC_RALT)
-#define MTF MT(MOD_LALT, KC_PSCR)
+#define MTF MT(MOD_LALT, KC_GRV)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_ergodox_80(
@@ -21,14 +21,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSFT, KC_LALT, KC_LCTL, MTF,     LTB,
 
                 KC_BRID, KC_BRIU,
-        OSL(6), XXXXXXX, XXXXXXX,
+        OSL(6), KC_PSCR, XXXXXXX,
         KC_SPC, KC_LGUI, TG(5),
 
-        XXXXXXX, KC_CIRC, KC_GRV, KC_LPRN, KC_RPRN, XXXXXXX, KC_BSPC,
-        KC_PGUP, KC_Y,    KC_U,   KC_I,    KC_O,    KC_P,    MTD,
-                 KC_H,    KC_J,   KC_K,    KC_L,    KC_QUOT, MTB,
-        KC_PGDN, KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_BSLS, XXXXXXX,
-                          LTA,    MTE,     KC_RCTL, KC_LALT, KC_RSFT,
+        XXXXXXX, XXXXXXX, KC_TILD, KC_LPRN, KC_RPRN, XXXXXXX,    KC_BSPC,
+        KC_PGUP, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,       MTD,
+                 KC_H,    KC_J,    KC_K,    KC_L,    KC_QUOT,    MTB,
+        KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  S(KC_QUOT), KC_BSLS,
+                          LTA,     MTE,     KC_RCTL, KC_LALT,    KC_RSFT,
 
         KC_VOLD, KC_VOLU,
         XXXXXXX, TG(1),   OSL(6),
@@ -60,7 +60,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [2] = LAYOUT_ergodox_80(
         XXXXXXX, XXXXXXX, KC_PEQL, S(KC_SCLN), XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, KC_1,    KC_2,    KC_3,       KC_PPLS, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_4,    KC_5,    KC_6,       KC_PMNS, XXXXXXX,
+        XXXXXXX, KC_4,    KC_5,    KC_6,       KC_PMNS, KC_PERC,
         XXXXXXX, KC_7,    KC_8,    KC_9,       KC_PAST, KC_PSLS, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, KC_DOT,     KC_0,
 
@@ -91,10 +91,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX, XXXXXXX, KC_HASH, KC_ASTR, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, KC_PIPE, KC_LCBR, KC_RCBR, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_AMPR, KC_LCBR, KC_RCBR, XXXXXXX, XXXXXXX,
                  XXXXXXX, KC_CIRC, KC_DLR,  XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_AMPR, KC_LBRC, KC_RBRC, XXXXXXX, XXXXXXX, XXXXXXX,
-                          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, XXXXXXX, XXXXXXX, XXXXXXX,
+                          KC_PIPE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 
         XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX,
