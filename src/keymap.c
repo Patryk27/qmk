@@ -8,7 +8,7 @@
 #define MTA MT(MOD_LSFT, KC_ESC)
 #define MTB MT(MOD_RSFT, KC_ENTER)
 #define MTC MT(MOD_LCTL, KC_TAB)
-#define MTD MT(MOD_RCTL, XXXXXXX)
+#define MTD MT(MOD_RCTL, KC_BSLS)
 #define MTE MT(MOD_RALT, KC_RALT)
 #define MTF MT(MOD_LALT, KC_GRV)
 
@@ -24,11 +24,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         OSL(6), KC_PSCR, XXXXXXX,
         KC_SPC, KC_LGUI, TG(5),
 
-        XXXXXXX, XXXXXXX, KC_TILD, KC_LPRN, KC_RPRN, XXXXXXX,    KC_BSPC,
-        KC_PGUP, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,       MTD,
-                 KC_H,    KC_J,    KC_K,    KC_L,    KC_QUOT,    MTB,
-        KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  S(KC_QUOT), KC_BSLS,
-                          LTA,     MTE,     KC_RCTL, KC_LALT,    KC_RSFT,
+        XXXXXXX, XXXXXXX, KC_TILD, KC_LPRN, KC_RPRN, XXXXXXX, KC_BSPC,
+        KC_PGUP, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    MTD,
+                 KC_H,    KC_J,    KC_K,    KC_L,    KC_QUOT, MTB,
+        KC_PGDN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_DQUO, A(KC_X),
+                          LTA,     MTE,     KC_RCTL, KC_LALT, KC_RSFT,
 
         KC_VOLD, KC_VOLU,
         XXXXXXX, TG(1),   OSL(6),
@@ -169,15 +169,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 void matrix_scan_user(void) {
-    if (biton32(layer_state) == 5) {
-        ergodox_right_led_2_on();
-    } else {
-        ergodox_right_led_2_off();
-    }
-
     if (biton32(layer_state) == 1) {
         ergodox_right_led_3_on();
     } else {
         ergodox_right_led_3_off();
     }
+
+    if (biton32(layer_state) == 5) {
+        ergodox_right_led_1_on();
+    } else {
+        ergodox_right_led_1_off();
+    }
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    /* switch (keycode) { */
+    /*     case LCTL_T(KC_DQUO): */
+    /*         if (record->tap.count == 1 && record->event.pressed) { */
+    /*             tap_code16(KC_DQUO); */
+    /*             return false; */
+    /*         } */
+    /*         break; */
+    /* } */
+
+    return true;
 }
